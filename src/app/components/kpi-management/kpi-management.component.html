@@ -1,0 +1,199 @@
+<div class="kpi-management-container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h1>KPI Management</h1>
+      <p>Create, configure KPIs and manage their performance metrics</p>
+    </div>
+    <button class="btn-primary" (click)="openModal()">+ Add New KPI</button>
+  </div>
+
+  <!-- KPI Stats Cards -->
+  <div class="kpi-stats">
+    <div class="stat-card purple">
+      <h2>30</h2>
+      <p>Total KPIs</p>
+    </div>
+    <div class="stat-card green">
+      <h2>30</h2>
+      <p>Active KPIs</p>
+    </div>
+    <div class="stat-card blue">
+      <h2>15</h2>
+      <p>Higher is Better</p>
+    </div>
+    <div class="stat-card orange">
+      <h2>8</h2>
+      <p>Lower is Better</p>
+    </div>
+    <div class="stat-card pink">
+      <h2>7</h2>
+      <p>Equal to Target</p>
+    </div>
+  </div>
+
+  <!-- KPI Library -->
+  <div class="kpi-library">
+    <div class="library-header">
+      <h2>KPI Library</h2>
+      <p>Manage your organization’s Key Performance Indicators</p>
+    </div>
+
+    <!-- Search + Filters -->
+    <div class="library-controls">
+      <input type="text" placeholder="Search KPI by Name, Code..." />
+      <div class="filters">
+        <select>
+          <option>All Categories</option>
+          <option>Operational</option>
+          <option>Quality</option>
+        </select>
+        <select>
+          <option>All Formulas</option>
+          <option>Higher is Better</option>
+          <option>Lower is Better</option>
+          <option>Equal to Target</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- KPI Table -->
+    <div class="table-wrap">
+      <table class="kpi-table">
+        <thead>
+          <tr>
+            <th>KPI Name</th>
+            <th>Code</th>
+            <th>Category</th>
+            <th>Formula</th>
+            <th>Unit</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              Claims Processing Volume
+              <p class="muted">Number of claims processed per day</p>
+            </td>
+            <td>CPV_001</td>
+            <td>Operational</td>
+            <td>HIGHER_IS_BETTER</td>
+            <td>Claims/Day</td>
+            <td><span class="status active">Active</span></td>
+            <td><button class="icon-btn">⋮</button></td>
+          </tr>
+          <tr>
+            <td>
+              Claims Denial Rate
+              <p class="muted">Percentage of claims denied</p>
+            </td>
+            <td>CDR_001</td>
+            <td>Quality</td>
+            <td>LOWER_IS_BETTER</td>
+            <td>Percentage</td>
+            <td><span class="status active">Active</span></td>
+            <td><button class="icon-btn">⋮</button></td>
+          </tr>
+          <tr>
+            <td>
+              Average Claim Settlement Time
+              <p class="muted">Average time taken to settle a claim</p>
+            </td>
+            <td>ACST_001</td>
+            <td>Operational</td>
+            <td>EQUAL_TO_TARGET</td>
+            <td>Percentage</td>
+            <td><span class="status active">Active</span></td>
+            <td><button class="icon-btn">⋮</button></td>
+          </tr>
+          <tr>
+            <td>
+              Customer Satisfaction Score
+              <p class="muted">Average score of customer feedback on claims handling</p>
+            </td>
+            <td>CPV_001</td>
+            <td>Operations</td>
+            <td>HIGHER_IS_BETTER</td>
+            <td>Claims/Day</td>
+            <td><span class="status active">Active</span></td>
+            <td><button class="icon-btn">⋮</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <p>Page 1 of 10</p>
+      <div class="pager">
+        <button class="btn-outline">Previous</button>
+        <button class="btn-outline">Next</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Add New KPI Modal -->
+<div class="modal-backdrop" *ngIf="showModal">
+  <div class="modal">
+    <h2>Add New KPI</h2>
+
+    <form (ngSubmit)="createKpi()">
+      <!-- KPI Name -->
+      <div class="form-row">
+        <label>KPI Name<span class="required">*</span></label>
+        <input type="text" placeholder="eg: Claims Denial Rate..." [(ngModel)]="newKpi.name" name="name" required />
+      </div>
+
+      <!-- KPI Code + Category -->
+      <div class="form-grid">
+        <div class="form-row">
+          <label>KPI Code<span class="required">*</span></label>
+          <input type="text" placeholder="eg: CDR_001" [(ngModel)]="newKpi.code" name="code" required />
+        </div>
+        <div class="form-row">
+          <label>Category<span class="required">*</span></label>
+          <select [(ngModel)]="newKpi.category" name="category" required>
+            <option value="" disabled selected>Select Category</option>
+            <option>Operational</option>
+            <option>Quality</option>
+            <option>Finance</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="form-row">
+        <label>Description<span class="required">*</span></label>
+        <textarea placeholder="eg: Percentage of claims denied..." [(ngModel)]="newKpi.description" name="description" required></textarea>
+      </div>
+
+      <!-- Formula + Unit -->
+      <div class="form-grid">
+        <div class="form-row">
+          <label>Formula Type<span class="required">*</span></label>
+          <select [(ngModel)]="newKpi.formula" name="formula" required>
+            <option value="" disabled selected>Select Formula</option>
+            <option>HIGHER_IS_BETTER</option>
+            <option>LOWER_IS_BETTER</option>
+            <option>EQUAL_TO_TARGET</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>Measurement Unit<span class="required">*</span></label>
+          <input type="text" placeholder="eg: Claims/Day" [(ngModel)]="newKpi.unit" name="unit" required />
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="modal-actions">
+        <button type="button" class="btn-outline" (click)="closeModal()">Cancel</button>
+        <button type="submit" class="btn-primary">Create KPI</button>
+      </div>
+    </form>
+  </div>
+</div>

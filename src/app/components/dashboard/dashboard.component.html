@@ -1,0 +1,125 @@
+<div class="dashboard-container">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-content">
+      <h1>Admin Dashboard</h1>
+      <p>Monitor your KPI performance and achievements</p>
+    </div>
+    <div class="role-switcher">
+      <button class="role-btn" (click)="setRole('Employee')" [class.active]="activeRole==='Employee'">Employee</button>
+      <button class="role-btn" (click)="setRole('Manager')" [class.active]="activeRole==='Manager'">Manager</button>
+      <button class="role-btn" (click)="setRole('Sr. Manager')" [class.active]="activeRole==='Sr. Manager'">Sr. Manager</button>
+      <button class="role-btn" (click)="setRole('Admin')" [class.active]="activeRole==='Admin'">Admin</button>
+    </div>
+  </div>
+
+  <!-- Dashboard Grid -->
+  <div class="dashboard-grid">
+    <!-- Employee Count -->
+    <div class="card card-employee">
+      <div class="card-header">
+        <h3>Employee Count</h3>
+        <div class="card-icon icon-primary">⚙️</div>
+      </div>
+      <div class="card-value">1,247</div>
+      <div class="card-label">Total Employees</div>
+      <div class="card-change">+23 this month</div>
+    </div>
+
+    <!-- Current Payout Processing -->
+    <div class="card card-payout">
+      <div class="card-header">
+        <h3>Current Payout Processing</h3>
+        <div class="card-icon icon-warning">⚡</div>
+      </div>
+      <div class="card-value">2,156</div>
+      <div class="card-label">Pending Evaluations (Current)</div>
+      <div class="card-actions">
+        <button class="btn btn-outline">View Pending</button>
+        <button class="btn btn-primary">Process Payouts</button>
+      </div>
+    </div>
+
+    <!-- Monthly Payouts -->
+    <div class="card card-monthly">
+      <div class="card-header">
+        <h3>Monthly Payouts</h3>
+        <div class="card-icon icon-orange">📊</div>
+      </div>
+      <div class="card-value">₹12.4M</div>
+      <div class="card-label">Total Variable Pay</div>
+      
+      <div class="table-container">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Month</th>
+              <th>Total Payout</th>
+              <th>Employees</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>June<br />2025</td>
+              <td>₹12.4M</td>
+              <td>1,247</td>
+              <td><span class="status-badge">PAID</span></td>
+            </tr>
+            <tr>
+              <td>Mar<br />2025</td>
+              <td>₹11.8M</td>
+              <td>1,224</td>
+              <td><span class="status-badge">PAID</span></td>
+            </tr>
+            <tr>
+              <td>Dec<br />2024</td>
+              <td>₹11.2M</td>
+              <td>1,201</td>
+              <td><span class="status-badge">PAID</span></td>
+            </tr>
+            <tr>
+              <td>July<br />2024</td>
+              <td>₹10.9M</td>
+              <td>1,178</td>
+              <td><span class="status-badge">PAID</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Performance Profiles -->
+    <div class="card card-performance">
+      <div class="card-header">
+        <h3>Performance Profiles</h3>
+        <div class="card-icon icon-blue">🎭</div>
+      </div>
+      <div class="card-value">35</div>
+      <div class="card-label">Active Profiles</div>
+      <div class="card-change">+23 this month</div>
+    </div>
+
+    <!-- Organization Payouts -->
+    <div class="card card-organization">
+      <div class="card-header">
+        <h3>Organization Payouts</h3>
+        <div class="card-icon icon-primary">💰</div>
+      </div>
+      <div class="org-metrics">
+        <div class="metric-card">
+          <div class="metric-value">₹12.4M</div>
+          <div class="metric-label">This Month</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value">₹34.2M</div>
+          <div class="metric-label">Q1 Total</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value">₹2.1M</div>
+          <div class="metric-label">Pending</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

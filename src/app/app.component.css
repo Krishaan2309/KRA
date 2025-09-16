@@ -1,0 +1,23 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* full screen height */
+  overflow: hidden; /* prevent body scroll */
+}
+
+app-top-header-bar,
+app-top-nav-bar {
+  flex: 0 0 auto; /* fixed height elements */
+}
+
+.main-scroll {
+  flex: 1 1 auto;
+  overflow-y: auto; /* only this section scrolls */
+  background: var(--bg); /* match dashboard background */
+}

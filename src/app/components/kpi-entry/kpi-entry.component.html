@@ -1,0 +1,163 @@
+<div class="kpi-entry-container">
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active">KPI Entry</button>
+    <button class="tab">History</button>
+    <button class="tab">Drafts</button>
+    <button class="tab">Self Rating</button>
+  </div>
+
+  <!-- Header -->
+  <div class="entry-header">
+    <h1>KPI Entry</h1>
+    <p>Enter actual performance values for Users</p>
+  </div>
+
+  <div class="entry-layout">
+    <!-- KPI Table -->
+    <div class="table-section">
+      <div class="table-wrap">
+        <table class="kpi-table">
+          <thead>
+            <tr>
+              <th>KPI Name</th>
+              <th>Weight</th>
+              <th>Target</th>
+              <th>Actual</th>
+              <th>Achieved%</th>
+              <th>PLIP Score</th>
+              <th>Weightage</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <strong>Claims Processing Volume</strong>
+                <p class="muted">Claims/Day • HIGHER_IS_BETTER</p>
+              </td>
+              <td>20%</td>
+              <td><input type="number" value="1000" /></td>
+              <td><input type="number" value="1000" /></td>
+              <td>100%</td>
+              <td>4</td>
+              <td>16%</td>
+              <td><span class="status completed">Completed</span></td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Claims Denial Rate</strong>
+                <p class="muted">Percentage • LOWER_IS_BETTER</p>
+              </td>
+              <td>20%</td>
+              <td><input type="number" value="8.0" /></td>
+              <td><input type="number" value="10.5" /></td>
+              <td>76.2%</td>
+              <td>3</td>
+              <td>0%</td>
+              <td><span class="status completed">Completed</span></td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Days in Accounts Receivable</strong>
+                <p class="muted">Days • LOWER_IS_BETTER</p>
+              </td>
+              <td>20%</td>
+              <td><input type="number" value="45" /></td>
+              <td><input type="number" value="38" /></td>
+              <td>118.4%</td>
+              <td>4</td>
+              <td>16%</td>
+              <td><span class="status completed">Completed</span></td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Collection Rate</strong>
+                <p class="muted">Percentage • HIGHER_IS_BETTER</p>
+              </td>
+              <td>15%</td>
+              <td><input type="number" value="92.0" /></td>
+              <td><input type="number" value="88.0" /></td>
+              <td>95.7%</td>
+              <td>4</td>
+              <td>12%</td>
+              <td><span class="status completed">Completed</span></td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Attendance Rate</strong>
+                <p class="muted">Percentage • HIGHER_IS_BETTER</p>
+              </td>
+              <td>10%</td>
+              <td><input type="number" value="95.0" /></td>
+              <td><input type="number" value="120" /></td>
+              <td>126.3%</td>
+              <td>5</td>
+              <td>10%</td>
+              <td><span class="status completed">Completed</span></td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Budget Utilization</strong>
+                <p class="muted">Percentage • EQUAL_TO_TARGET</p>
+              </td>
+              <td>10%</td>
+              <td><input type="number" value="100.0" /></td>
+              <td><input type="number" value="100" /></td>
+              <td>100%</td>
+              <td>4</td>
+              <td>8%</td>
+              <td><span class="status completed">Completed</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Buttons -->
+      <div class="action-buttons">
+        <button class="btn-outline">Save as Draft</button>
+        <button class="btn-primary">Submit</button>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="user-box">
+        <span class="user-name">Sasidharan</span>
+        <span class="user-id">ASP1001 - L4</span>
+      </div>
+
+      <div class="summary-card">
+        <h3>Current Summary</h3>
+        <div class="summary-row">
+          <span>Projected Pay</span>
+          <strong>₹620</strong>
+        </div>
+        <div class="summary-row">
+          <span>Total KPIs</span>
+          <strong>6</strong>
+        </div>
+        <div class="summary-row">
+          <span>Pending</span>
+          <strong>0</strong>
+        </div>
+        <div class="summary-row">
+          <span>Total Weightage</span>
+          <strong>62%</strong>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <h3>Last Month Reference - Aug 25</h3>
+        <ul class="reference-list">
+          <li><span>Claims Processing Volume</span> <strong>20% ↑8%</strong></li>
+          <li><span>Claims Denial Rate</span> <strong>6% ↑25%</strong></li>
+          <li><span>Days in Accounts Receivable</span> <strong>30% ↑10%</strong></li>
+          <li><span>Collection Rate</span> <strong>12% ↑25%</strong></li>
+          <li><span>Attendance Rate</span> <strong>30% ↑10%</strong></li>
+          <li><span>Budget Utilization</span> <strong>12% ↑25%</strong></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

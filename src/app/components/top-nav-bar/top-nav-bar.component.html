@@ -1,0 +1,51 @@
+<nav class="navbar">
+  <!-- Logo -->
+  <div class="logo">
+    <img src="assets/asplogo.svg" alt="ASP-RCM Logo" />
+  </div>
+
+  <!-- Menu -->
+  <div class="menu">
+    <a routerLink="/dashboard" routerLinkActive="active">
+      <img src="assets/kra dashboard.svg" alt="dashboard" /> Dashboard
+    </a>
+    <a routerLink="/kpi-entry" routerLinkActive="active">
+      <img src="assets/kra kpi entry.svg" alt="kpi-entry" /> KPI Entry
+    </a>
+    <a routerLink="/kpi-management" routerLinkActive="active">
+      <img src="assets/kra kpi management.svg" alt="kpi-management" /> KPI Management
+    </a>
+    <a routerLink="/performance-profiles" routerLinkActive="active">
+      <img src="assets/kra performance profiles.svg" alt="kpi performance profiles" /> Performance Profiles
+    </a>
+  </div>
+
+  <!-- User -->
+  <div class="user">T</div>
+
+  <!-- Hamburger -->
+  <div class="hamburger" (click)="toggleMenu()">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" [class.show]="isMenuOpen">
+  <!-- Collapse button -->
+  <button class="close-btn" (click)="toggleMenu()">✖</button>
+
+  <a routerLink="/dashboard" routerLinkActive="active" (click)="toggleMenu()">
+    <img src="assets/kra dashboard.svg" alt="dashboard" /> Dashboard
+  </a>
+  <a routerLink="/kpi-entry" routerLinkActive="active" (click)="toggleMenu()">
+    <img src="assets/kra kpi entry.svg" alt="kpi-entry" /> KPI Entry
+  </a>
+  <a routerLink="/kpi-management" routerLinkActive="active" (click)="toggleMenu()">
+    <img src="assets/kra kpi management.svg" alt="kpi-management" /> KPI Management
+  </a>
+  <a routerLink="/performance-profiles" routerLinkActive="active" (click)="toggleMenu()">
+    <img src="assets/kra performance profiles.svg" alt="kpi performance profiles" /> Performance Profiles
+  </a>
+</div>

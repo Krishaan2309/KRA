@@ -1,0 +1,48 @@
+.top-header-bar {
+  width: 100%;
+  background-color: #f4f7fa; /* light gray background */
+  overflow: hidden;
+  padding: 10px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Scrolling wrapper */
+.scrolling-text {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  animation: scroll-left 15s linear infinite;
+}
+
+/* Badge */
+.badge {
+  background-color: #d1fae5; /* light green */
+  color: #047857;           /* dark green */
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 9999px; /* pill shape */
+  margin-right: 12px;
+  font-size: 13px;
+}
+
+/* Message */
+.message {
+  font-size: 14px;
+  color: #1a1a1a;
+}
+
+.message strong {
+  font-weight: 600;
+}
+
+/* Animation */
+@keyframes scroll-left {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
