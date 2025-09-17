@@ -5,20 +5,27 @@
       <h1>KPI Management</h1>
       <p>Create, configure KPIs and manage their performance metrics</p>
     </div>
-    <button class="btn-primary" (click)="openModal()">+ Add New KPI</button>
+    <button class="btn-primary" (click)="openModal()">
+      <span class="plus-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
+          <path d="M8.52053 1.48926V15.4444M1.54297 8.46682H15.4981" stroke="white" stroke-width="1.99359" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span> 
+      <span>Add New KPI</span>
+    </button>
   </div>
 
   <!-- KPI Stats Cards -->
   <div class="kpi-stats">
-    <div class="stat-card purple">
+    <div class="stat-card blue">
       <h2>30</h2>
       <p>Total KPIs</p>
     </div>
-    <div class="stat-card green">
+    <div class="stat-card purple">
       <h2>30</h2>
       <p>Active KPIs</p>
     </div>
-    <div class="stat-card blue">
+    <div class="stat-card peach">
       <h2>15</h2>
       <p>Higher is Better</p>
     </div>
@@ -26,7 +33,7 @@
       <h2>8</h2>
       <p>Lower is Better</p>
     </div>
-    <div class="stat-card pink">
+    <div class="stat-card green">
       <h2>7</h2>
       <p>Equal to Target</p>
     </div>

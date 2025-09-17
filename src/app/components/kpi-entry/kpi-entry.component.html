@@ -9,8 +9,26 @@
 
   <!-- Header -->
   <div class="entry-header">
-    <h1>KPI Entry</h1>
-    <p>Enter actual performance values for Users</p>
+    <div>
+      <h1>KPI Entry</h1>
+      <p>Enter actual performance values for Users</p>
+    </div>
+    <div class="user-box">
+            <div>
+              <div class="avatar">
+                S
+              </div>
+              <div>
+                <span class="user-name">Sasidharan</span>
+                <span class="user-id">ASP1001 - L4</span>            
+              </div>
+            </div>
+            <div>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21" viewBox="0 0 20 21" fill="none">
+                <path d="M5 7.9668L10 12.9668L15 7.9668" stroke="#101828" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+    </div>
   </div>
 
   <div class="entry-layout">
@@ -122,10 +140,7 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
-      <div class="user-box">
-        <span class="user-name">Sasidharan</span>
-        <span class="user-id">ASP1001 - L4</span>
-      </div>
+      
 
       <div class="summary-card">
         <h3>Current Summary</h3>
@@ -133,30 +148,75 @@
           <span>Projected Pay</span>
           <strong>₹620</strong>
         </div>
-        <div class="summary-row">
-          <span>Total KPIs</span>
-          <strong>6</strong>
+        <div class="summary-rows">
+          <div class="left-row">
+            <span>Total KPIs</span>
+            <strong>6</strong>              
+          </div>
+          <div class="right-row">
+            <span>Completed</span>
+            <strong class="strong">6</strong>              
+          </div>          
         </div>
-        <div class="summary-row">
-          <span>Pending</span>
-          <strong>0</strong>
-        </div>
-        <div class="summary-row">
-          <span>Total Weightage</span>
-          <strong>62%</strong>
+        <div class="summary-rows">
+          <div class="left-row">
+            <span>Pending</span>
+            <strong>0</strong>             
+          </div>
+          <div class="right-row">
+            <span>Total Weightage</span>
+            <span class="strong">62%</span>             
+          </div>          
         </div>
       </div>
 
       <div class="summary-card">
         <h3>Last Month Reference - Aug 25</h3>
-        <ul class="reference-list">
-          <li><span>Claims Processing Volume</span> <strong>20% ↑8%</strong></li>
-          <li><span>Claims Denial Rate</span> <strong>6% ↑25%</strong></li>
-          <li><span>Days in Accounts Receivable</span> <strong>30% ↑10%</strong></li>
-          <li><span>Collection Rate</span> <strong>12% ↑25%</strong></li>
-          <li><span>Attendance Rate</span> <strong>30% ↑10%</strong></li>
-          <li><span>Budget Utilization</span> <strong>12% ↑25%</strong></li>
-        </ul>
+        <div class="reference-list">
+          <li>
+            <span class="head">Claims Processing Volume</span>
+            <div class="values">
+              <strong>20%</strong>
+              <span class="change">↑8%</span>
+            </div>
+          </li>
+          <li>
+            <span class="head right">Claims Denial Rate</span>
+            <div class="values right">
+              <span class="change">↑6%</span>
+              <strong>6%</strong>
+            </div>
+          </li>
+          <li>
+            <span class="head">Days in Accounts Receivable</span>
+            <div class="values">
+              <strong>30%</strong>
+              <span class="change">↑10%</span>
+            </div>
+          </li>
+          <li>
+            <span class="head right">Collection Rate</span>
+            <div class="values right">
+              <span class="change">↑12%</span>
+              <strong>12%</strong>
+            </div>
+          </li>
+          <li>
+            <span class="head">Attendance Rate</span>
+            <div class="values">
+              <strong>30%</strong>
+              <span class="change">↑10%</span>
+
+            </div>
+          </li>
+          <li>
+            <span class="head right">Budget Utilization</span>
+            <div class="values right">
+              <span class="change">↑12%</span>
+              <strong>12%</strong>
+            </div>
+          </li>
+        </div>
       </div>
     </div>
   </div>
