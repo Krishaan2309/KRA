@@ -9,6 +9,19 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { KpiManagementComponent } from './components/kpi-management/kpi-management.component';
 import { KpiEntryComponent } from './components/kpi-entry/kpi-entry.component';
 import { PerformanceProfilesComponent } from './components/performance-profiles/performance-profiles.component';
+import { HttpClientModule } from '@angular/common/http'; // 👈 Add this import
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ReactiveFormsModule } from '@angular/forms';
+
+// PrimeNG modules
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { DropdownModule } from 'primeng/dropdown';
+import { RippleModule } from 'primeng/ripple';
+
+
+
 
 @NgModule({
   declarations: [
@@ -23,7 +36,17 @@ import { PerformanceProfilesComponent } from './components/performance-profiles/
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule,
+    BrowserAnimationsModule,
+    ReactiveFormsModule,
+
+    // PrimeNG
+    TableModule,
+    ButtonModule,
+    InputTextModule,
+    DropdownModule,
+    RippleModule
   ],
   providers: [],
   bootstrap: [AppComponent]
