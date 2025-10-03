@@ -72,25 +72,25 @@
   <div class="container-search">
     <!-- Search on left -->
     <span class="p-input-icon-left">
-      <i class="pi pi-search"></i>
+      <i class="pi pi-search search-i"></i>
       <input 
         class="search-input"
         pInputText 
         type="text" 
         (input)="applyGlobalFilter($event, 'contains')" 
-        placeholder="Global Search" />
+        placeholder="Search KPI by Name, Code..." />
     </span>
 
     <div class="dropdowns">
       <div class="dropdowns">
         <select [(ngModel)]="selectedCategory" (change)="dt.filter(selectedCategory, 'kpiCategory', 'equals')" (onChange)="dt.rows = rows; dt.reset()">
-          <option class="default-select" value="" disabled>All Categories</option>
+          <option class="default-select" value="">All Categories</option>
           <option>Operational</option>
           <option>Quality</option>
           <option>Finance</option>
-        </select>
+        </select> 
         <select [(ngModel)]="selectedFormula" (change)="dt.filter(selectedFormula, 'formulaCode', 'equals')">
-        <option value="" disabled>All Formulas</option>
+        <option value="">All Formulas</option>
         <option *ngFor="let option of formulaOptions" [value]="option.value">
           {{ option.label }}
         </option>
