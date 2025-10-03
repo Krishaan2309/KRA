@@ -9,16 +9,18 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { KpiManagementComponent } from './components/kpi-management/kpi-management.component';
 import { KpiEntryComponent } from './components/kpi-entry/kpi-entry.component';
 import { PerformanceProfilesComponent } from './components/performance-profiles/performance-profiles.component';
+import { ToasterComponent } from './components/toaster/toaster.component';
 import { HttpClientModule } from '@angular/common/http'; // 👈 Add this import
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
-
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 // PrimeNG modules
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { RippleModule } from 'primeng/ripple';
+
 
 
 
@@ -31,7 +33,8 @@ import { RippleModule } from 'primeng/ripple';
     DashboardComponent,
     KpiManagementComponent,
     KpiEntryComponent,
-    PerformanceProfilesComponent
+    PerformanceProfilesComponent,
+    ToasterComponent
   ],
   imports: [
     BrowserModule,
@@ -40,13 +43,12 @@ import { RippleModule } from 'primeng/ripple';
     HttpClientModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
-
-    // PrimeNG
     TableModule,
     ButtonModule,
     InputTextModule,
     DropdownModule,
-    RippleModule
+    RippleModule,
+     OverlayPanelModule,  
   ],
   providers: [],
   bootstrap: [AppComponent]

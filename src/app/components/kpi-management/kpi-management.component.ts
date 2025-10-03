@@ -4,6 +4,7 @@ import { Table } from 'primeng/table';
 import { Kpi } from 'src/app/modals/kpi.model';
 import { StatisticsResponse } from 'src/app/modals/statistics.model';
 import { HttpsCallsService } from 'src/app/services/https-calls.service';
+import { ToastService } from 'src/app/services/toaster.service';
 
 @Component({
   selector: 'app-kpi-management',
@@ -18,15 +19,19 @@ export class KpiManagementComponent {
   @ViewChild('dt') dt!: Table;
   rows: number = 5; // default
 
-
    formulaOptions = [
   { label: 'HIGHER_IS_BETTER', value: 'higher' },
   { label: 'LOWER_IS_BETTER', value: 'lower' },
   { label: 'EQUAL_TO_TARGET', value: 'equal' }
 ];
 
+
+  selectedCategory: string = '';
+  selectedFormula: string = '';
+
   constructor(private httpsCallApi: HttpsCallsService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private toaster : ToastService
   ){
     this.kpiForm = this.fb.group({
       kpiName: ['', Validators.required],
@@ -37,6 +42,36 @@ export class KpiManagementComponent {
       measurementUnit: ['', Validators.required],
     });
   }
+selectedActions: { [key: string]: string } = {}; // Track selected action per KPI
+
+actionOptions = [
+  {
+    id: 'edit',
+    label: 'Edit',
+    value: 'edit'
+  },
+  {
+    id: 'delete',
+    label: 'Delete',
+    value: 'delete'
+  }
+];
+
+// Add these methods to your component class
+selectAction(option: any, kpi: Kpi) {
+  this.selectedActions[kpi.kpiCode] = option.id;
+  
+  if (option.id === 'edit') {
+    this.onEdit(kpi);
+  } else if (option.id === 'delete') {
+    this.onDelete(kpi);
+  }
+}
+
+isActionSelected(option: any, kpi: Kpi): boolean {
+  return this.selectedActions[kpi.kpiCode] === option.id;
+}
+
 
   isInvalid(controlName: string): boolean {
     const control = this.kpiForm.get(controlName);
@@ -94,7 +129,7 @@ createKpi() {
 
     this.httpsCallApi.createKpi(payload).subscribe({
       next: (response) => {
-        console.log('✅ KPI created successfully:', response);
+        
 
         // Option A: Re-fetch from backend (recommended if API returns updated list)
         this.httpsCallApi.getKpiList().subscribe({
@@ -103,6 +138,8 @@ createKpi() {
             if (this.dt) {
               this.dt.reset(); // clears filters, sorting, pagination
             }
+            console.log('✅ KPI created successfully:', response);
+            this.toaster.show('the kpi is successfully created', "success", 'KPI Created');
           },
           error: (err) => {
             console.error('❌ Error refreshing KPI list:', err);
@@ -116,11 +153,44 @@ createKpi() {
         console.error('❌ Error creating KPI:', err);
       }
     });
+    
   } else {
     this.kpiForm.markAllAsTouched();
   }
 }
 
+
+onEdit(kpi: Kpi) {
+  console.log('Edit KPI:', kpi);
+  // Implement your edit logic here
+  // Example: Open modal with pre-filled data
+  // this.kpiForm.patchValue({
+  //   kpiName: kpi.kpiName,
+  //   kpiCode: kpi.kpiCode,
+  //   kpiCategory: kpi.kpiCategory,
+  //   measurementUnit: kpi.measurementUnit,
+  //   formulaCode: kpi.formulaCode
+  // });
+  // this.showModal = true;
+}
+
+onDelete(kpi: Kpi) {
+  console.log('Delete KPI:', kpi);
+  // Implement your delete logic here
+  // Example: Show confirmation dialog and call delete API
+  // if (confirm(`Are you sure you want to delete ${kpi.kpiName}?`)) {
+  //   this.httpsCallApi.deleteKpi(kpi.kpiCode).subscribe({
+  //     next: () => {
+  //       this.toaster.show('KPI deleted successfully', 'success', 'KPI Deleted');
+  //       this.ngOnInit(); // Refresh the list
+  //     },
+  //     error: (err) => {
+  //       console.error('Error deleting KPI:', err);
+  //       this.toaster.show('Failed to delete KPI', 'error', 'Error');
+  //     }
+  //   });
+  // }
+}
 
   // Close modal
   closeModal() {

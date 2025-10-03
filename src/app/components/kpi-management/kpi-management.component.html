@@ -69,24 +69,44 @@
     <!-- </div> -->
 <div class="table-wrap">
   <!-- Top controls: Search (left) + Rows per page dropdown (right) -->
-  <div class="flex justify-between items-center mb-4">
+  <div class="container-search">
     <!-- Search on left -->
     <span class="p-input-icon-left">
       <i class="pi pi-search"></i>
       <input 
+        class="search-input"
         pInputText 
         type="text" 
         (input)="applyGlobalFilter($event, 'contains')" 
         placeholder="Global Search" />
     </span>
 
-    <!-- Rows per page dropdown on right -->
-    <p-dropdown 
-      [options]="[{label:'5', value:5},{label:'10', value:10},{label:'15', value:15}]"
-      [(ngModel)]="rows"
-      placeholder="Rows per page"
-      (onChange)="dt.rows = rows; dt.reset()">
-    </p-dropdown>
+    <div class="dropdowns">
+      <div class="dropdowns">
+        <select [(ngModel)]="selectedCategory" (change)="dt.filter(selectedCategory, 'kpiCategory', 'equals')" (onChange)="dt.rows = rows; dt.reset()">
+          <option class="default-select" value="" disabled>All Categories</option>
+          <option>Operational</option>
+          <option>Quality</option>
+          <option>Finance</option>
+        </select>
+        <select [(ngModel)]="selectedFormula" (change)="dt.filter(selectedFormula, 'formulaCode', 'equals')">
+        <option value="" disabled>All Formulas</option>
+        <option *ngFor="let option of formulaOptions" [value]="option.value">
+          {{ option.label }}
+        </option>
+        </select>
+    </div>
+      <!-- Rows per page dropdown on right -->
+      <p-dropdown 
+        class="dropdown-container"
+        [options]="[{label:'5', value:5},{label:'10', value:10},{label:'15', value:15}]"
+        [(ngModel)]="rows"
+        placeholder="Rows per page"
+        (onChange)="dt.rows = rows; dt.reset()">
+      </p-dropdown>
+    </div>
+
+
   </div>
 
   <!-- Table -->
@@ -95,6 +115,8 @@
     [value]="kpis" 
     [paginator]="true" 
     [rows]="rows" 
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
     [globalFilterFields]="['kpiName','kpiCode','kpiCategory','measurementUnit','formulaCode']">
 
     <!-- Table Headers -->
@@ -105,8 +127,8 @@
         <th pSortableColumn="kpiCategory">Category <p-sortIcon field="kpiCategory"></p-sortIcon></th>
         <th pSortableColumn="measurementUnit">Unit <p-sortIcon field="measurementUnit"></p-sortIcon></th>
         <th pSortableColumn="formulaCode">Formula <p-sortIcon field="formulaCode"></p-sortIcon></th>
-        <th pSortableColumn="isActive">Status <p-sortIcon field="isActive"></p-sortIcon></th>
-        <th pSortableColumn="profileCount">Profiles <p-sortIcon field="profileCount"></p-sortIcon></th>
+        <!-- <th pSortableColumn="isActive">Status <p-sortIcon field="isActive"></p-sortIcon></th> -->
+        <th pSortableColumn="profileCount">Actions <p-sortIcon field="profileCount"></p-sortIcon></th>
       </tr>
     </ng-template>
 
@@ -118,19 +140,64 @@
         <td>{{ kpi.kpiCategory }}</td>
         <td>{{ kpi.measurementUnit }}</td>
         <td>{{ kpi.formulaCode }}</td>
-        <td>
-          <span [ngClass]="kpi.isActive ? 'text-green-600 font-bold' : 'text-red-600 font-bold'">
-            {{ kpi.isActive ? 'Active' : 'Inactive' }}
-          </span>
+        <!-- <td>
+          <span [ngClass]="kpi.isActive ?  'status-active' : 'status-inactive'">
+           <span [ngStyle]="">
+              <svg xmlns="http://www.w3.org/2000/svg" width="6" height="7" viewBox="0 0 6 7" fill="none">
+                <circle cx="3" cy="3.4668" r="3" fill="#12B76A"/>
+              </svg>
+          </span> {{ kpi.isActive ? 'Active' : 'Inactive' }}
+          </span> 
+        </td>-->
+      <td>
+      <p-overlayPanel #op styleClass="actions-overlay">
+        <div class="action-options-container">
+          <ng-container *ngFor="let option of actionOptions">
+            <div 
+              class="action-option-item"
+              (click)="selectAction(option, kpi)"
+            >
+              <span class="option-label">{{ option.label }}</span>
+              <div class="toggle-wrapper">
+                <input 
+                  type="radio" 
+                  [name]="'action-toggle-' + kpi.kpiCode"
+                  [checked]="isActionSelected(option, kpi)"
+                  class="toggle-input"
+                />
+                <span class="toggle-slider"></span>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </p-overlayPanel>
+      
+      <button
+        pButton
+        type="button"
+        class="actions-button"
+        (click)="op.toggle($event)"
+      >
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </button>
+    </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr >
+        <td [ngStyle]="{ 'font-weight': 'bold', 'text-align': 'center' }" colspan="5">
+          No Data Available
         </td>
-        <td>{{ kpi.profileCount }}</td>
       </tr>
     </ng-template>
 
     <!-- Bottom paginator controls -->
-    <ng-template pTemplate="paginatorleft" let-state>
+    <!-- <ng-template pTemplate="paginatorleft" let-state>
       Showing {{ state.first + 1 }} to {{ state.first + state.rows }} of {{ state.totalRecords }} entries
-    </ng-template>
+    </ng-template> -->
   </p-table>
 </div>
 
@@ -232,3 +299,4 @@
   </div>
 </div>
 
+<app-toaster></app-toaster>
