@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { StatisticsResponse } from '../modals/statistics.model';
-import { Kpi } from '../modals/kpi.model';
+import { Kpi, KpiPayload } from '../modals/kpi.model';
 
 @Injectable({
   providedIn: 'root'
@@ -24,15 +24,15 @@ export class HttpsCallsService {
   }
 
 
-  createKpi(payload: any): Observable<any> {
-    return this.http.post(this.baseUrl, payload, {
+  createKpi(payload: KpiPayload): Observable<Kpi> {
+    return this.http.post<Kpi>(this.baseUrl, payload, {
       headers: { 'Content-Type': 'application/json' }
     });
   }
 
-  updateKpi(kpi_id :string, payload: any): Observable<any> {
+  updateKpi(kpi_id :string, payload: KpiPayload): Observable<Kpi> {
     const url = `${this.baseUrl}/${kpi_id}/update`;
-    return this.http.post<any>(url, payload);
+    return this.http.post<Kpi>(url, payload);
   }
 
 }

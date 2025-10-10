@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { Table } from 'primeng/table';
-import { Kpi } from 'src/app/modals/kpi.model';
+import { Kpi , KpiPayload} from 'src/app/modals/kpi.model';
 import { StatisticsResponse } from 'src/app/modals/statistics.model';
 import { HttpsCallsService } from 'src/app/services/https-calls.service';
 import { ToastService } from 'src/app/services/toaster.service';

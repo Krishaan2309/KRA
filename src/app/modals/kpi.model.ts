@@ -9,3 +9,5 @@ export interface Kpi {
   isActive: boolean;
   profileCount: number;
 }
+
+export type KpiPayload = Omit<Kpi, 'id' | 'profileCount'>;
