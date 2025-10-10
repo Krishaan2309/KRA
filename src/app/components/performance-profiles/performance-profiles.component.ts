@@ -1,4 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
+import { Table } from 'primeng/table';
+import { HttpsCallsService } from 'src/app/services/https-calls.service';
+import { PerformanceProfile } from 'src/app/modals/performance-profile.model';
+import { Kpi } from 'src/app/modals/kpi.model';
+import { Department } from 'src/app/modals/department.model';
+import { Grade } from 'src/app/modals/grade.model';
 
 @Component({
   selector: 'app-performance-profiles',
@@ -6,81 +13,167 @@ import { Component } from '@angular/core';
   styleUrls: ['./performance-profiles.component.css']
 })
 export class PerformanceProfilesComponent {
+  @ViewChild('dt') dt!: Table;
 
-
-  kpis: any[] = [
-    {
-      id: '1',
-      name: 'Quality Score',
-      minScore: 0,
-      maxScore: 100,
-      qualificationCriteria: 80,
-      weightage: 25
-    },
-    {
-      id: '2',
-      name: 'Attendance',
-      minScore: 0,
-      maxScore: 100,
-      qualificationCriteria: 80,
-      weightage: 25
-    },
-    {
-      id: '3',
-      name: 'Production',
-      minScore: 0,
-      maxScore: 100,
-      qualificationCriteria: 80,
-      weightage: 25
-    },
-    {
-      id: '4',
-      name: 'Production',
-      minScore: 0,
-      maxScore: 100,
-      qualificationCriteria: 80,
-      weightage: 25
-    }
-  ];
-
-
+  performanceProfiles: PerformanceProfile[] = [];
+  kpiMasterList: Kpi[] = [];
+  departments: Department[] = [];
+  levels: Grade[] = [];
+  createProfileForm!: FormGroup;
 
   showCreateProfile = false;
+  rows = 10;
+  selectedStatus = '';
+  actionOptions = [
+    { label: 'Edit Profile' },
+    { label: 'View Details' },
+  ];
 
-  profile = {
-    name: '',
-    description: '',
-    level: '',
-    basePay: '',
-    status: 'Active',
-    kpis: [] as any[]
-  };
+  constructor(
+    private httpsCallApi: HttpsCallsService,
+    private fb: FormBuilder
+  ) {}
 
-  newKpi: any = { name: '', min: 0, max: 100, criteria: 80, weight: '25%' };
-
-  openModal() { this.showCreateProfile = true; }
-  closeModal() { this.showCreateProfile = false; }
-
-  addKpi() {
-    if (this.newKpi.name) {
-      this.profile.kpis.push({ ...this.newKpi });
-      this.newKpi = { name: '', min: 0, max: 100, criteria: 80, weight: '25%' };
-    }
+  ngOnInit(): void {
+    this.fetchProfiles();
+    this.loadKpiMaster();
+    this.loadDepartments();
+    this.loadLevels();
+    this.initForm();
   }
-  removeKpi(i: number) { this.profile.kpis.splice(i,1); }
 
-  calcTotal(): number {
-    let total = 0;
-    this.profile.kpis.forEach(k => {
-      let val = parseFloat(k.weight);
-      if (!isNaN(val)) total += val;
+  /** 🔹 Initialize Form with FormArray for KPI assignments */
+  initForm() {
+    this.createProfileForm = this.fb.group({
+      profileName: ['', Validators.required],
+      profileDescription: ['', Validators.required],
+      selfRatingEnabled: [true],
+      isActive: [true],
+      departmentId: ['', Validators.required],
+      gradeId: ['', Validators.required],
+      kpiAssignments: this.fb.array([this.createKpiAssignmentGroup()])
     });
-    return total;
   }
 
+  /** 🔹 Create a new KPI assignment form group */
+  createKpiAssignmentGroup(): FormGroup {
+    return this.fb.group({
+      kpiId: ['', Validators.required],
+      weightage: [0, [Validators.required, Validators.min(1), Validators.max(100)]],
+      kpiMinRange: [0, [Validators.required, Validators.min(0)]],
+      kpiMaxRange: [100, [Validators.required, Validators.min(1)]],
+      kpiQualifyCriteria: [80, [Validators.required, Validators.min(0), Validators.max(100)]],
+      isActive: [true]
+    });
+  }
+
+  /** 🔹 Get KPI FormArray */
+  get kpiAssignments(): FormArray {
+    return this.createProfileForm.get('kpiAssignments') as FormArray;
+  }
+
+  /** 🔹 Add KPI row */
+  addKpiAssignment() {
+    this.kpiAssignments.push(this.createKpiAssignmentGroup());
+  }
+
+  /** 🔹 Remove KPI row */
+  removeKpiAssignment(index: number) {
+    this.kpiAssignments.removeAt(index);
+  }
+
+  /** 🔹 API Calls */
+  loadKpiMaster(): void {
+    this.httpsCallApi.getKpiMaster().subscribe({
+      next: (data) => (this.kpiMasterList = data),
+      error: (err) => console.error('KPI Master API error:', err),
+    });
+  }
+
+  loadDepartments(): void {
+    this.httpsCallApi.getDepartments().subscribe({
+      next: (data) => (this.departments = data),
+      error: (err) => console.error('Departments API error:', err),
+    });
+  }
+
+  loadLevels(): void {
+    this.httpsCallApi.getLevels().subscribe({
+      next: (data) => (this.levels = data),
+      error: (err) => console.error('Levels API error:', err),
+    });
+  }
+
+  fetchProfiles(): void {
+    this.httpsCallApi.getPerformanceProfiles().subscribe({
+      next: (data) => {
+        this.performanceProfiles = data;
+        console.log('Profiles:', this.performanceProfiles);
+      },
+      error: (err) => console.error('API error:', err),
+    });
+  }
+
+  /** 🔹 Search */
+  applyGlobalFilter(event: Event, matchMode: string) {
+    const input = event.target as HTMLInputElement;
+    this.dt.filterGlobal(input.value, matchMode);
+  }
+
+  selectAction(option: any, profile: any) {
+    console.log('Selected action:', option.label, 'for', profile.profileName);
+  }
+
+  /** 🔹 Modal */
+  openModal() {
+    this.initForm(); // reset with fresh FormArray
+    this.showCreateProfile = true;
+  }
+
+  closeModal() {
+    this.showCreateProfile = false;
+  }
+
+  /** 🔹 Utility */
+  isInvalid(control: string): boolean {
+    const c = this.createProfileForm.get(control);
+    return !!(c && c.invalid && (c.touched || c.dirty));
+  }
+
+  /** 🔹 Submit */
   onCreateProfile() {
-    console.log("New Profile Created:", this.profile);
-    this.closeModal();
-  }
+    if (this.createProfileForm.invalid) {
+      this.createProfileForm.markAllAsTouched();
+      return;
+    }
 
+    const formValue = this.createProfileForm.value;
+
+    const payload = {
+      profileName: formValue.profileName,
+      profileDescription: formValue.profileDescription,
+      baseVariablePay: 0, // removed from UI per your request
+      selfRatingEnabled: formValue.selfRatingEnabled,
+      isActive: formValue.isActive,
+      kpiAssignments: formValue.kpiAssignments,
+      departmentGradeMappings: [
+        {
+          departmentId: formValue.departmentId,
+          gradeId: formValue.gradeId,
+          isActive: true,
+        },
+      ],
+    };
+
+    console.log('POST Payload:', payload);
+
+    this.httpsCallApi.createPerformanceProfile(payload).subscribe({
+      next: (res) => {
+        console.log('Profile created successfully:', res);
+        this.fetchProfiles();
+        this.closeModal();
+      },
+      error: (err) => console.error('Failed to create profile:', err),
+    });
+  }
 }

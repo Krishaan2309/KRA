@@ -89,7 +89,7 @@ isActionSelected(option: any, kpi: Kpi): boolean {
         console.error('Error fetching statistics', err);
       }
     });
-   this.httpsCallApi.getKpiList().subscribe({
+   this.httpsCallApi.getKpiMaster().subscribe({
       next: (res) => {
         this.kpis = res;
         console.log(this.kpis)
@@ -142,7 +142,7 @@ isActionSelected(option: any, kpi: Kpi): boolean {
           
 
           // Option A: Re-fetch from backend (recommended if API returns updated list)
-          this.httpsCallApi.getKpiList().subscribe({
+          this.httpsCallApi.getKpiMaster().subscribe({
             next: (res) => {
               this.kpis = res;
               if (this.dt) {
@@ -242,7 +242,7 @@ updateKpi() {
 
     this.httpsCallApi.updateKpi(this.selectedKpi.id, payload).subscribe({
       next: (res) => {
-        this.httpsCallApi.getKpiList().subscribe({
+        this.httpsCallApi.getKpiMaster().subscribe({
           next: (res) => {
             this.kpis = res;
             if (this.dt) {
