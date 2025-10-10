@@ -16,82 +16,128 @@
       <p class="subtitle">Click on a profile to view detailed configuration</p>
 
       <!-- Search + Filter -->
-      <div class="search-filter">
-        <input type="text" placeholder="Search KPI by Name, Code..." />
-        <button class="dropdown">All Status ⌄</button>
-      </div>
 
-      <!-- Table -->
-      <div class="table-wrap">
-        <table class="profiles-table">
-          <thead>
-            <tr>
-              <th>Profile Name</th>
-              <th>Levels</th>
-              <th>KPIs</th>
-              <th>Variable Pay</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="highlight">
-              <td>
-                <strong>Team Lead</strong>
-                <p class="muted">Claims Processing, Denial Rate +3 more</p>
-              </td>
-              <td>L4</td>
-              <td>5 KPIs</td>
-              <td>₹2,500</td>
-              <td><span class="status active">● Active</span></td>
-              <td><button class="icon-btn">⋮</button></td>
-            </tr>
-            <tr>
-              <td>
-                <strong>Manager</strong>
-                <p class="muted">Revenue Achievement, Cost Management +4 more</p>
-              </td>
-              <td>L5</td>
-              <td>7 KPIs</td>
-              <td>₹1,500</td>
-              <td><span class="status active">● Active</span></td>
-              <td><button class="icon-btn">⋮</button></td>
-            </tr>
-            <tr>
-              <td>
-                <strong>AR Analyst</strong>
-                <p class="muted">Claims Processing, Denial Rate +3 more</p>
-              </td>
-              <td>L1 & L2</td>
-              <td>5 KPIs</td>
-              <td>₹1,000</td>
-              <td><span class="status active">● Active</span></td>
-              <td><button class="icon-btn">⋮</button></td>
-            </tr>
-            <tr>
-              <td>
-                <strong>QA Specialist</strong>
-                <p class="muted">Claims Processing, Denial Rate +3 more</p>
-              </td>
-              <td>L1 & L2</td>
-              <td>4 KPIs</td>
-              <td>₹1,000</td>
-              <td><span class="status active">● Active</span></td>
-              <td><button class="icon-btn">⋮</button></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    <div class="table-wrap">
+  <!-- Top controls: Search + Filters -->
+  <div class="container-search">
+    <span class="p-input-icon-left">
+      <i class="pi pi-search search-i"></i>
+      <input
+        class="search-input"
+        pInputText
+        type="text"
+        (input)="applyGlobalFilter($event, 'contains')"
+        placeholder="Search Profile by Name..."
+      />
+    </span>
 
-      <!-- Pagination -->
-      <div class="pagination">
-        <span>Page 1 of 10</span>
-        <div>
-          <button class="btn-outline">Previous</button>
-          <button class="btn-outline">Next</button>
-        </div>
-      </div>
+    <div class="dropdowns">
+      <select
+        [(ngModel)]="selectedStatus"
+        (change)="dt.filter(selectedStatus, 'isActive', 'equals')"
+      >
+        <option value="">All Status</option>
+        <option value="true">Active</option>
+        <option value="false">Inactive</option>
+      </select>
+
+      <p-dropdown
+        class="dropdown-container"
+        [options]="[{label:'5', value:5},{label:'10', value:10},{label:'15', value:15}]"
+        [(ngModel)]="rows"
+        placeholder="Rows per page"
+        (onChange)="dt.rows = rows; dt.reset()"
+      ></p-dropdown>
     </div>
+  </div>
+
+  <!-- Table -->
+  <p-table
+    #dt
+    [value]="performanceProfiles"
+    [paginator]="true"
+    [rows]="rows"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} profiles"
+    [globalFilterFields]="['profileName','profileDescription','baseVariablePay']"
+  >
+    <!-- Headers -->
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="profileName">
+          Profile Name <p-sortIcon field="profileName"></p-sortIcon>
+        </th>
+        <th>Levels</th>
+        <th pSortableColumn="kpis">
+          KPIs <p-sortIcon field="kpis"></p-sortIcon>
+        </th>
+        <th pSortableColumn="baseVariablePay">
+          Variable Pay <p-sortIcon field="baseVariablePay"></p-sortIcon>
+        </th>
+        <th pSortableColumn="isActive">
+          Status <p-sortIcon field="isActive"></p-sortIcon>
+        </th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+
+    <!-- Rows -->
+    <ng-template pTemplate="body" let-profile>
+      <tr>
+        <td>
+          <strong>{{ profile.profileName }}</strong>
+          <p class="muted">{{ profile.profileDescription }}</p>
+        </td>
+        <td>
+          {{ profile.departmentGradeMappings?.length
+            ? profile.departmentGradeMappings[0].gradeLevel
+            : 'N/A' }}
+        </td>
+        <td>{{ profile.kpiCount || 0 }} KPIs</td>
+        <td>₹{{ profile.baseVariablePay | number }}</td>
+        <td>
+          <span [ngClass]="profile.isActive ? 'status active' : 'status inactive'">
+            ● {{ profile.isActive ? 'Active' : 'Inactive' }}
+          </span>
+        </td>
+        <td>
+          <p-overlayPanel #op styleClass="actions-overlay">
+            <div class="action-options-container">
+              <ng-container *ngFor="let option of actionOptions">
+                <div
+                  class="action-option-item"
+                  (click)="selectAction(option, profile)"
+                >
+                  <span class="option-label">{{ option.label }}</span>
+                </div>
+              </ng-container>
+            </div>
+          </p-overlayPanel>
+
+          <button
+            pButton
+            type="button"
+            class="actions-button"
+            (click)="op.toggle($event)"
+          >
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </button>
+        </td>
+      </tr>
+    </ng-template>
+
+    <!-- Empty Message -->
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="6" class="text-center font-bold">No Performance Profiles Found</td>
+      </tr>
+    </ng-template>
+  </p-table>
+    </div>
+
+
 
     <!-- Right: Profile Details -->
     <div class="profile-details">
@@ -148,183 +194,109 @@
 
 
 
-
-
-
-<!-- create-profile-modal.component.html -->
+<!-- Create Profile Modal -->
 <div class="modal-overlay" *ngIf="showCreateProfile" (click)="closeModal()">
   <div class="modal-container" (click)="$event.stopPropagation()">
     <div class="modal-header">
       <h2>Create New Profile</h2>
     </div>
 
-    <div class="modal-body">
-      <!-- Basic Information Section -->
-      <div class="form-row">
-        <div class="form-group">
-          <label for="profileName">Profile Name <span class="required">*</span></label>
-          <div class="select-wrapper">
-            <input 
-              type="text" 
-              id="profileName" 
-              placeholder="eg: Claims Denial Rate..." 
-              class="form-control"
-            >
-            <span class="dropdown-arrow">⌄</span>
+    <form [formGroup]="createProfileForm" (ngSubmit)="onCreateProfile()">
+      <div class="modal-body">
+
+        <!-- Basic Info -->
+        <div class="form-row">
+          <div class="form-group">
+            <label>Profile Name <span class="required">*</span></label>
+            <input type="text" formControlName="profileName" placeholder="e.g. Claims Denial Rate..." class="form-control" />
+            <small class="error" *ngIf="isInvalid('profileName')">
+              Profile name is required.
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label>Description <span class="required">*</span></label>
+            <input type="text" formControlName="profileDescription" placeholder="e.g. Percentage of claims denied..." class="form-control" />
+            <!-- <small class="error" *ngIf="form.profileDescription.touched && form.profileDescription.invalid">
+              Description is required.
+            </small> -->
+            <small class="error" *ngIf="isInvalid('profileDescription')">
+              Description is required.
+            </small>
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="description">Description<span class="required">*</span></label>
-          <input 
-            type="text" 
-            id="description" 
-            
-            placeholder="eg: Percentage of claims denied..." 
-            class="form-control"
-          >
-        </div>
-      </div>
+        <!-- Department + Level -->
+        <div class="form-row">
+          <div class="form-group">
+            <label>Department <span class="required">*</span></label>
+            <div class="select-wrapper">
+              <select class="form-control" formControlName="departmentId">
+                <option value="">Select Department</option>
+                <option *ngFor="let dept of departments" [value]="dept.id">
+                  {{ dept.departmentName }}
+                </option>
+              </select>
+            </div>
+            <!-- <small class="error" *ngIf="form.departmentId.touched && form.departmentId.invalid"> -->
+              <!-- Department is required. -->
+            <!-- </small> -->
+             <small class="error" *ngIf="isInvalid('departmentId')">
+              Department is required.
+            </small>
+          </div>
 
-      <div class="form-row">
-        <div class="form-group">
-          <label for="levels">Levels<span class="required">*</span></label>
-          <div class="select-wrapper">
-            <select id="levels"  class="form-control">
-              <option value="">Select Levels</option>
-              <option value="level1">Level 1</option>
-              <option value="level2">Level 2</option>
-              <option value="level3">Level 3</option>
-            </select>
-            <span class="dropdown-arrow">⌄</span>
+          <div class="form-group">
+            <label>Level <span class="required">*</span></label>
+            <div class="select-wrapper">
+              <select class="form-control" formControlName="gradeId">
+                <option value="">Select Level</option>
+                <option *ngFor="let lvl of levels" [value]="lvl.id">
+                  {{ lvl.gradeLevel }} - {{ lvl.gradeName }}
+                </option>
+              </select>
+            </div>
+            <!-- <small class="error" *ngIf="form.gradeId.touched && form.gradeId.invalid"> -->
+              <!-- Level is required. -->
+            <!-- </small> -->
+
+            <small class="error" *ngIf="isInvalid('gradeId')">
+              Level is required.
+            </small>
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="baseVariablePay">Base Variable Pay <span class="required">*</span></label>
-          <input 
-            type="text" 
-            id="baseVariablePay" 
-            
-            placeholder="eg: ₹1,500" 
-            class="form-control"
-          >
-        </div>
+        <!-- KPI Assignments -->
+        <div class="kpi-section">
+          <h3>Add KPI to Profile</h3>
 
-        <div class="form-group">
-          <label for="status">Status<span class="required">*</span></label>
-          <div class="select-wrapper">
-            <select id="status" class="form-control">
-              <option value="Active">Active</option>
-              <option value="Inactive">Inactive</option>
-            </select>
-            <span class="dropdown-arrow">⌄</span>
-          </div>
-        </div>
-      </div>
+          <div formArrayName="kpiAssignments">
+  <div *ngFor="let kpi of kpiAssignments.controls; let i = index" [formGroupName]="i" class="kpi-form-row">
+    <select formControlName="kpiId" class="form-control">
+      <option value="">Select KPI</option>
+      <option *ngFor="let k of kpiMasterList" [value]="k.id">{{ k.kpiName }}</option>
+    </select>
 
-      <!-- KPI Section -->
-      <div class="kpi-section">
-        <h3>Add KPI to Profile</h3>
-        
-        <!-- Add KPI Form -->
-        <div class="kpi-form">
-          <div class="kpi-form-row">
-            <div class="form-group">
-              <label>KPI</label>
-              <div class="select-wrapper">
-                <select [(ngModel)]="newKpi.name" class="form-control">
-                  <option value="Quality Score">Quality Score</option>
-                  <option value="Attendance">Attendance</option>
-                  <option value="Production">Production</option>
-                  <option value="Customer Satisfaction">Customer Satisfaction</option>
-                </select>
-                <span class="dropdown-arrow">⌄</span>
-              </div>
-            </div>
+    <input type="number" formControlName="kpiMinRange" placeholder="Min" />
+    <input type="number" formControlName="kpiMaxRange" placeholder="Max" />
+    <input type="number" formControlName="kpiQualifyCriteria" placeholder="Qualify" />
+    <input type="number" formControlName="weightage" placeholder="%" />
 
-            <div class="form-group">
-              <label>Min Score Range</label>
-              <input 
-                type="number" 
-                [(ngModel)]="newKpi.minScore" 
-                class="form-control"
-                placeholder="0"
-              >
-            </div>
-
-            <div class="form-group">
-              <label>Max Score Range</label>
-              <input 
-                type="number" 
-                [(ngModel)]="newKpi.maxScore" 
-                class="form-control"
-                placeholder="100"
-              >
-            </div>
-
-            <div class="form-group">
-              <label>Qualification Criteria</label>
-              <input 
-                type="number" 
-                [(ngModel)]="newKpi.qualificationCriteria" 
-                class="form-control"
-                placeholder="85"
-              >
-            </div>
-
-            <div class="form-group">
-              <label>Weightage</label>
-              <input 
-                type="text" 
-                [(ngModel)]="newKpi.weightage" 
-                class="form-control"
-                placeholder="25%"
-              >
-            </div>
-
-            <button type="button" class="add-btn">
-              +
-            </button>
-          </div>
-        </div>
-
-        <!-- KPI List -->
-        <div class="kpi-list">
-          <div class="kpi-item" *ngFor="let kpi of kpis">
-            <div class="kpi-info">
-              <h4>{{kpi.name}}</h4>
-              <div class="kpi-details">
-                Min Score: <span class="value">{{kpi.minScore}}</span> • 
-                Max Score: <span class="value">{{kpi.maxScore}}</span> • 
-                Qualification Criteria: <span class="value">{{kpi.qualificationCriteria}}</span>
-              </div>
-            </div>
-            <div class="kpi-actions">
-              <span class="weightage">{{kpi.weightage}}%</span>
-              <button type="button" class="delete-btn" >
-                🗑️
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Total Weightage -->
-        <div class="total-weightage">
-          <span>Total Weightage</span>
-          <span class="total-value">00.0%</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Modal Footer -->
-    <div class="modal-footer">
-      <button type="button" class="btn btn-cancel" (click)="closeModal()">
-        Cancel
-      </button>
-      <button type="button" class="btn btn-create" (click)="onCreateProfile()">
-        Create Profile
-      </button>
-    </div>
+    <button type="button" (click)="addKpiAssignment()" *ngIf="i === kpiAssignments.length - 1">+</button>
+    <button type="button" (click)="removeKpiAssignment(i)" *ngIf="kpiAssignments.length > 1">🗑️</button>
   </div>
 </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-cancel" (click)="closeModal()">Cancel</button>
+        <button type="submit" class="btn btn-create" [disabled]="createProfileForm.invalid">
+          Create Profile
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
