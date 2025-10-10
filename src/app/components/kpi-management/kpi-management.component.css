@@ -179,17 +179,19 @@
   flex-wrap: wrap;
 }
 
+
 .dropdowns select {
   padding: 10px;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
   font-size: 14px;
   background: #fff;
-  color: var(--Gray-500, #667085);
+  color: var(--Gray-700, #344054);
   font-family: Inter;
+  font-size: 0.875rem;
   font-style: normal;
-  font-weight: 400;
-  line-height: 1.5rem;
+  font-weight: 600;
+  line-height: 1.25rem; /* 142.857% */
 }
 
 ::ng-deep .dropdowns option {
@@ -203,6 +205,12 @@
 
 ::ng-deep .p-element.p-dropdown-label {
   padding: 8px;
+  color: var(--Gray-700, #344054);
+  font-family: Inter;
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.25rem; /* 142.857% */
 }
 
 ::ng-deep .ng-pristine {
@@ -224,13 +232,13 @@
   border: 1px solid var(--Gray-200, #E4E7EC);
   border-radius: 0.5rem;
   background: var(--Gray-50, #F9FAFB);
-  max-height: 300px;
+  max-height: 400px;
   overflow-y: auto;
   overflow-x: auto;
 }
 
 ::ng-deep .p-datatable > .p-datatable-wrapper::-webkit-scrollbar {
-  display: none;
+  /* display: none; */
 }
 
 ::ng-deep .p-datatable .p-datatable-thead > tr > th {
@@ -240,7 +248,7 @@
   font-family: Inter;
   font-size: 0.75rem;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.125rem;
   border-bottom: 1px solid var(--Gray-200, #E4E7EC);
   position: sticky;
@@ -262,6 +270,12 @@
   width: auto;
 }
 
+/* Add this new rule */
+::ng-deep .p-datatable .p-datatable-tbody > tr > td:first-child {
+  width: 450px;  /* or your preferred width */
+  max-width: 450px;
+}
+
 ::ng-deep .p-datatable .p-datatable-header {
   padding: 1rem 0rem !important;
 }
@@ -276,9 +290,40 @@ th, td {
   text-align: left;
 }
 
+
 tr {
   border-bottom: 1px solid var(--Gray-200, #E4E7EC);
 }
+
+.kpi-text {
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;           /* set your preferred width */
+}
+
+.kpi-name {
+  color: var(--Gray-700, #344054);
+  font-family: Inter;
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.25rem; /* 142.857% */
+}
+
+.kpi-description {
+  color: var(--Gray-500, #667085);
+  font-family: Inter;
+  font-size: 0.75rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.125rem; /* 150% */
+  white-space: nowrap;        /* keep on one line */
+  overflow: hidden;           /* hide overflow text */
+  text-overflow: ellipsis;    /* show ... if too long */
+  cursor: pointer;            /* make it clear it's hoverable */
+}
+
+
 
 /* ==================== Actions Button ==================== */
 .actions-button {

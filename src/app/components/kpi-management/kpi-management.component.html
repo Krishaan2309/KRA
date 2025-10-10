@@ -99,8 +99,8 @@
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
     [globalFilterFields]="['kpiName','kpiCode','kpiCategory','measurementUnit','formulaCode']">
 
-    <!-- Table Headers -->
-    <ng-template pTemplate="header">
+    <!-- Table Headers with sort functionaly-->
+    <!-- <ng-template pTemplate="header">
       <tr>
         <th pSortableColumn="kpiName">KPI Name <p-sortIcon field="kpiName"></p-sortIcon></th>
         <th pSortableColumn="kpiCode">KPI Code <p-sortIcon field="kpiCode"></p-sortIcon></th>
@@ -109,12 +109,29 @@
         <th pSortableColumn="formulaCode">Formula <p-sortIcon field="formulaCode"></p-sortIcon></th>
         <th pSortableColumn="profileCount">Actions <p-sortIcon field="profileCount"></p-sortIcon></th>
       </tr>
+    </ng-template> -->
+
+    <!-- Table Headers without sort functionaly-->   
+    <ng-template pTemplate="header">
+      <tr>
+        <th>KPI Name</th>
+        <th>KPI Code</th>
+        <th>Category</th>
+        <th>Unit</th>
+        <th>Formula</th>
+        <th>Actions</th>
+      </tr>
     </ng-template>
 
     <!-- Table Body -->
     <ng-template pTemplate="body" let-kpi>
       <tr>
-        <td>{{ kpi.kpiName }}</td>
+        <td>
+          <span class="kpi-text">
+            <span class="kpi-name">{{ kpi.kpiName }}</span>
+            <span class="kpi-description">{{ kpi.kpiDescription }}</span>
+          </span>
+        </td>
         <td>{{ kpi.kpiCode }}</td>
         <td>{{ kpi.kpiCategory }}</td>
         <td>{{ kpi.measurementUnit }}</td>
@@ -178,7 +195,7 @@
 <!-- Add New KPI Modal -->
 <div class="modal-backdrop" *ngIf="showModal">
   <div class="modal">
-    <h2>Add New KPI</h2>
+    <h2>{{ isEditMode ? 'Edit Existing KPI': 'Add New KPI'}}</h2>
 
     <form [formGroup]="kpiForm" (ngSubmit)="submitKpi()">
       <!-- KPI Name -->
