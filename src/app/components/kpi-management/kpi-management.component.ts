@@ -18,6 +18,8 @@ export class KpiManagementComponent {
   kpiForm: FormGroup;
   @ViewChild('dt') dt!: Table;
   rows: number = 5; // default
+  isEditMode: boolean = false;
+  selectedKpi: Kpi | null = null; // Use your actual KPI type if defined
 
    formulaOptions = [
   { label: 'HIGHER_IS_BETTER', value: 'higher' },
@@ -82,7 +84,6 @@ isActionSelected(option: any, kpi: Kpi): boolean {
     this.httpsCallApi.getStatistics().subscribe({
       next: (res) => {
         this.stats = res;
-        // console.log(this.stats)
       },
       error: (err) => {
         console.error('Error fetching statistics', err);
@@ -97,8 +98,6 @@ isActionSelected(option: any, kpi: Kpi): boolean {
         console.error('Error fetching KPI list:', err);
       }
     });
-
-
   }
 
   applyGlobalFilter(event: Event, mode: string) {
@@ -109,93 +108,163 @@ isActionSelected(option: any, kpi: Kpi): boolean {
 
   // Open modal
   openModal() {
+    this.isEditMode = false;
     this.showModal = true;
+    this.selectedKpi = null;
+    // this.kpiForm.reset();
   }
 
+  submitKpi() {
+    if (this.isEditMode) {
+      this.updateKpi();
+    } else {
+      this.createKpi();
+    }
+  }
 
-createKpi() {
-  if (this.kpiForm.valid) {
-    const formValues = this.kpiForm.value;
+  createKpi() {
+    if (this.kpiForm.valid) {
+      const formValues = this.kpiForm.value;
 
-    // Map form fields → API payload
-    const payload = {
-      kpiName: formValues.kpiName,
-      kpiCode: formValues.kpiCode,
-      kpiCategory: formValues.kpiCategory,
-      measurementUnit: formValues.measurementUnit,
-      formulaCode: formValues.formulaCode.toLowerCase(),
-      isActive: true
-    };
+      // Map form fields → API payload
+      const payload = {
+        kpiName: formValues.kpiName,
+        kpiCode: formValues.kpiCode,
+        kpiDescription: formValues.kpiDescription,
+        kpiCategory: formValues.kpiCategory || '',
+        measurementUnit: formValues.measurementUnit,
+        formulaCode: formValues.formulaCode.toLowerCase() || '',
+        isActive: true
+      };
 
-    this.httpsCallApi.createKpi(payload).subscribe({
-      next: (response) => {
-        
+      this.httpsCallApi.createKpi(payload).subscribe({
+        next: (response) => {
+          
 
-        // Option A: Re-fetch from backend (recommended if API returns updated list)
-        this.httpsCallApi.getKpiList().subscribe({
-          next: (res) => {
-            this.kpis = res;
-            if (this.dt) {
-              this.dt.reset(); // clears filters, sorting, pagination
+          // Option A: Re-fetch from backend (recommended if API returns updated list)
+          this.httpsCallApi.getKpiList().subscribe({
+            next: (res) => {
+              this.kpis = res;
+              if (this.dt) {
+                this.dt.reset(); // clears filters, sorting, pagination
+              }
+              console.log('✅ KPI created successfully:', response);
+              this.toaster.show('The kpi is successfully created', "success", 'KPI Created');
+            },
+            error: (err) => {
+              console.error('❌ Error refreshing KPI list:', err);
+              this.toaster.show('The Kpi is Failed to Create', 'error', 'KPI Not Created')
             }
-            console.log('✅ KPI created successfully:', response);
-            this.toaster.show('the kpi is successfully created', "success", 'KPI Created');
-          },
-          error: (err) => {
-            console.error('❌ Error refreshing KPI list:', err);
-          }
-        });
+          });
 
-        // Close modal & reset form
-        this.closeModal();
-      },
-      error: (err) => {
-        console.error('❌ Error creating KPI:', err);
-      }
-    });
-    
-  } else {
-    this.kpiForm.markAllAsTouched();
+          // Close modal & reset form
+          this.closeModal();
+        },
+        error: (err) => {
+          console.error('❌ Error creating KPI:', err);
+        }
+      });
+      
+    } else {
+      this.kpiForm.markAllAsTouched();
+    }
   }
-}
+
+  validateCategory(category: string): string {
+    const validCategories = ['Operational', 'Quality', 'Finance'];
+    return validCategories.includes(category) ? category : '';
+  }
+
+  validateFormulaCode(code: string): string {
+    const validCodes = ['higher', 'lower', 'equal'];
+    return validCodes.includes(code) ? code : '';
+  }
 
 
-onEdit(kpi: Kpi) {
+
+  onEdit(kpi: Kpi) {
   console.log('Edit KPI:', kpi);
-  // Implement your edit logic here
-  // Example: Open modal with pre-filled data
-  // this.kpiForm.patchValue({
-  //   kpiName: kpi.kpiName,
-  //   kpiCode: kpi.kpiCode,
-  //   kpiCategory: kpi.kpiCategory,
-  //   measurementUnit: kpi.measurementUnit,
-  //   formulaCode: kpi.formulaCode
-  // });
-  // this.showModal = true;
+
+  this.isEditMode = true;
+  this.selectedKpi = kpi;
+
+  this.kpiForm.patchValue({
+    kpiName: kpi.kpiName,
+    kpiCode: kpi.kpiCode,
+    kpiDescription: kpi.kpiDescription,
+    kpiCategory: kpi.kpiCategory || '',
+    measurementUnit: kpi.measurementUnit,
+    formulaCode: kpi.formulaCode || ''
+  });
+
+  this.showModal = true;
 }
 
-onDelete(kpi: Kpi) {
-  console.log('Delete KPI:', kpi);
-  // Implement your delete logic here
-  // Example: Show confirmation dialog and call delete API
-  // if (confirm(`Are you sure you want to delete ${kpi.kpiName}?`)) {
-  //   this.httpsCallApi.deleteKpi(kpi.kpiCode).subscribe({
-  //     next: () => {
-  //       this.toaster.show('KPI deleted successfully', 'success', 'KPI Deleted');
-  //       this.ngOnInit(); // Refresh the list
-  //     },
-  //     error: (err) => {
-  //       console.error('Error deleting KPI:', err);
-  //       this.toaster.show('Failed to delete KPI', 'error', 'Error');
-  //     }
-  //   });
-  // }
-}
+
+  onDelete(kpi: Kpi) {
+    console.log('Delete KPI:', kpi);
+    // Implement your delete logic here
+    // Example: Show confirmation dialog and call delete API
+    // if (confirm(`Are you sure you want to delete ${kpi.kpiName}?`)) {
+    //   this.httpsCallApi.deleteKpi(kpi.kpiCode).subscribe({
+    //     next: () => {
+    //       this.toaster.show('KPI deleted successfully', 'success', 'KPI Deleted');
+    //       this.ngOnInit(); // Refresh the list
+    //     },
+    //     error: (err) => {
+    //       console.error('Error deleting KPI:', err);
+    //       this.toaster.show('Failed to delete KPI', 'error', 'Error');
+    //     }
+    //   });
+    // }
+  }
 
   // Close modal
   closeModal() {
     this.showModal = false;
     this.kpiForm.reset();
   }
+
+
+updateKpi() {
+  if (this.kpiForm.valid && this.selectedKpi) {
+    const formValues = this.kpiForm.value;
+
+    const payload = {
+      kpiName: formValues.kpiName,
+      kpiCode: formValues.kpiCode,
+      kpiDescription: formValues.kpiDescription,
+      kpiCategory: formValues.kpiCategory,
+      measurementUnit: formValues.measurementUnit,
+      formulaCode: formValues.formulaCode.toLowerCase(),
+      isActive: true
+    };
+
+    this.httpsCallApi.updateKpi(this.selectedKpi.id, payload).subscribe({
+      next: (res) => {
+        this.httpsCallApi.getKpiList().subscribe({
+          next: (res) => {
+            this.kpis = res;
+            if (this.dt) {
+              this.dt.reset();
+            }
+            this.toaster.show('KPI updated successfully', 'success', 'KPI Updated');
+          },
+          error: (err) => {
+            this.toaster.show('Failed to refresh KPI list', 'error', 'Error');
+            console.error('❌ Error refreshing KPI list:', err);
+          }
+        });
+        this.closeModal();
+      },
+      error: (err) => {
+        this.toaster.show('Failed to update KPI', 'error', 'Update Failed');
+        console.error('❌ Error updating KPI:', err);
+      }
+    });
+  } else {
+    this.kpiForm.markAllAsTouched();
+  }
+}
 
 }

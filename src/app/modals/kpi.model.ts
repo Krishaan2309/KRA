@@ -2,6 +2,7 @@ export interface Kpi {
   id: string;
   kpiName: string;
   kpiCode: string;
+  kpiDescription: string;
   kpiCategory: string;
   measurementUnit: string;
   formulaCode: string;

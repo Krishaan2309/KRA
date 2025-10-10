@@ -30,4 +30,9 @@ export class HttpsCallsService {
     });
   }
 
+  updateKpi(kpi_id :string, payload: any): Observable<any> {
+    const url = `${this.baseUrl}/${kpi_id}/update`;
+    return this.http.post<any>(url, payload);
+  }
+
 }

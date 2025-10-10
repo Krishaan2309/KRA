@@ -127,7 +127,6 @@
         <th pSortableColumn="kpiCategory">Category <p-sortIcon field="kpiCategory"></p-sortIcon></th>
         <th pSortableColumn="measurementUnit">Unit <p-sortIcon field="measurementUnit"></p-sortIcon></th>
         <th pSortableColumn="formulaCode">Formula <p-sortIcon field="formulaCode"></p-sortIcon></th>
-        <!-- <th pSortableColumn="isActive">Status <p-sortIcon field="isActive"></p-sortIcon></th> -->
         <th pSortableColumn="profileCount">Actions <p-sortIcon field="profileCount"></p-sortIcon></th>
       </tr>
     </ng-template>
@@ -193,11 +192,6 @@
         </td>
       </tr>
     </ng-template>
-
-    <!-- Bottom paginator controls -->
-    <!-- <ng-template pTemplate="paginatorleft" let-state>
-      Showing {{ state.first + 1 }} to {{ state.first + state.rows }} of {{ state.totalRecords }} entries
-    </ng-template> -->
   </p-table>
 </div>
 
@@ -206,7 +200,7 @@
   <div class="modal">
     <h2>Add New KPI</h2>
 
-    <form [formGroup]="kpiForm" (ngSubmit)="createKpi()">
+    <form [formGroup]="kpiForm" (ngSubmit)="submitKpi()">
       <!-- KPI Name -->
       <div class="form-row">
         <label>KPI Name<span class="required">*</span></label>
@@ -237,7 +231,7 @@
         <div class="form-row">
           <label>Category<span class="required">*</span></label>
           <select formControlName="kpiCategory">
-            <option value="" disabled>Select Category</option>
+            <option value="">Select Category</option>
             <option>Operational</option>
             <option>Quality</option>
             <option>Finance</option>
@@ -265,7 +259,7 @@
         <div class="form-row">
   <label>Formula Type<span class="required">*</span></label>
   <select formControlName="formulaCode">
-    <option value="" disabled>Select Formula</option>
+    <option value="" class="default-select">Select Formula</option>
     <option *ngFor="let option of formulaOptions" [value]="option.value">
       {{ option.label }}
     </option>
@@ -292,7 +286,7 @@
       <div class="modal-actions">
         <button type="button" class="btn-outline" (click)="closeModal()">Cancel</button>
         <button type="submit" class="btn-primary" [disabled]="kpiForm.invalid">
-          Create KPI
+          {{ isEditMode ? 'Update KPI' : 'Create KPI' }}
         </button>
       </div>
     </form>

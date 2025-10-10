@@ -496,8 +496,11 @@ input, select, textarea {
   padding: 10px 14px;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
+  color: var(--Gray-700, #344054);
   font-size: 14px;
+  font-weight: 500;
 }
+
 
 textarea {
   resize: vertical;
