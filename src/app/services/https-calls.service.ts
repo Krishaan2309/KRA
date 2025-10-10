@@ -28,6 +28,7 @@ export class HttpsCallsService {
     return this.http.post<Kpi>(this.baseUrl, payload, {
       headers: { 'Content-Type': 'application/json' }
     });
+    
   }
 
   updateKpi(kpi_id :string, payload: KpiPayload): Observable<Kpi> {
