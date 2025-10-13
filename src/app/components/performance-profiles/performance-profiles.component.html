@@ -19,37 +19,37 @@
 
     <div class="table-wrap">
   <!-- Top controls: Search + Filters -->
-  <div class="container-search">
-    <span class="p-input-icon-left">
-      <i class="pi pi-search search-i"></i>
-      <input
-        class="search-input"
-        pInputText
-        type="text"
-        (input)="applyGlobalFilter($event, 'contains')"
-        placeholder="Search Profile by Name..."
-      />
-    </span>
+    <div class="container-search">
+      <span class="p-input-icon-left">
+        <i class="pi pi-search search-i"></i>
+        <input
+          class="search-input"
+          pInputText
+          type="text"
+          (input)="applyGlobalFilter($event, 'contains')"
+          placeholder="Search Profile by Name..."
+        />
+      </span>
 
-    <div class="dropdowns">
-      <select
-        [(ngModel)]="selectedStatus"
-        (change)="dt.filter(selectedStatus, 'isActive', 'equals')"
-      >
-        <option value="">All Status</option>
-        <option value="true">Active</option>
-        <option value="false">Inactive</option>
-      </select>
+      <div class="dropdowns">
+        <select
+          [(ngModel)]="selectedStatus"
+          (change)="dt.filter(selectedStatus, 'isActive', 'equals')"
+        >
+          <option value="">All Status</option>
+          <option value="true">Active</option>
+          <option value="false">Inactive</option>
+        </select>
 
-      <p-dropdown
-        class="dropdown-container"
-        [options]="[{label:'5', value:5},{label:'10', value:10},{label:'15', value:15}]"
-        [(ngModel)]="rows"
-        placeholder="Rows per page"
-        (onChange)="dt.rows = rows; dt.reset()"
-      ></p-dropdown>
+        <p-dropdown
+          class="dropdown-container"
+          [options]="[{label:'5', value:5},{label:'10', value:10},{label:'15', value:15}]"
+          [(ngModel)]="rows"
+          placeholder="Rows per page"
+          (onChange)="dt.rows = rows; dt.reset()"
+        ></p-dropdown>
+      </div>
     </div>
-  </div>
 
   <!-- Table -->
   <p-table
@@ -72,7 +72,7 @@
           KPIs <p-sortIcon field="kpis"></p-sortIcon>
         </th>
         <th pSortableColumn="baseVariablePay">
-          Variable Pay <p-sortIcon field="baseVariablePay"></p-sortIcon>
+          Department <p-sortIcon field="baseVariablePay"></p-sortIcon>
         </th>
         <th pSortableColumn="isActive">
           Status <p-sortIcon field="isActive"></p-sortIcon>
@@ -94,7 +94,11 @@
             : 'N/A' }}
         </td>
         <td>{{ profile.kpiCount || 0 }} KPIs</td>
-        <td>₹{{ profile.baseVariablePay | number }}</td>
+        <td>
+          {{ profile.departmentGradeMappings?.length
+            ? profile.departmentGradeMappings[0].departmentName
+            : 'N/A' }}          
+        </td>
         <td>
           <span [ngClass]="profile.isActive ? 'status active' : 'status inactive'">
             ● {{ profile.isActive ? 'Active' : 'Inactive' }}
@@ -103,10 +107,10 @@
         <td>
           <p-overlayPanel #op styleClass="actions-overlay">
             <div class="action-options-container">
-              <ng-container *ngFor="let option of actionOptions">
+              <ng-container *ngFor="let option of actionOptions" (onHide)="showActionButton = true">
                 <div
                   class="action-option-item"
-                  (click)="selectAction(option, profile)"
+                  (click)="selectAction(option, profile,op)"
                 >
                   <span class="option-label">{{ option.label }}</span>
                 </div>
@@ -138,59 +142,83 @@
     </div>
 
 
-
+  </div>
     <!-- Right: Profile Details -->
-    <div class="profile-details">
-      <h2>Profile Details</h2>
-      <p class="subtitle">View detailed configuration</p>
+  <div class="profile-details">
+  <h2>Profile Details</h2>
+  <p class="subtitle">View detailed configuration</p>
 
-      <div class="profile-card">
+    <div class="profile-card">
+      <!-- Check if selectedProfile exists -->
+      <ng-container *ngIf="selectedProfile; else noProfile" >
+      <div class="profile-card-content">
         <div class="profile-header">
-          <strong>Team Lead - L4</strong>
+          <strong>{{ selectedProfile.profileName }}</strong>
         </div>
+
         <div class="profile-info">
-          <p><span>Description</span> Entry-level analyst responsible...</p>
-          <p><span>Levels</span> L4</p>
-          <p><span>Variable Pay</span> ₹1,000</p>
-          <p><span>Status</span> <span class="status active">● Active</span></p>
+          <p>
+            <span>Description</span>
+            {{ selectedProfile.profileDescription || 'No description available' }}
+          </p>
+          <p>
+            <span>Levels</span>
+            {{ selectedProfile.departmentGradeMappings?.[0]?.gradeName || 'N/A' }}
+          </p>
+          <p>
+            <span>Variable Pay</span>
+            ₹{{ selectedProfile.baseVariablePay?? 0}}
+          </p>
+          <p>
+            <span>Status</span>
+            <span
+              class="status"
+              [ngClass]="selectedProfile.isActive ? 'active' : 'inactive'"
+            >
+              ● {{ selectedProfile.isActive ? 'Active' : 'Inactive' }}
+            </span>
+          </p>
         </div>
 
         <h3>KPI Assignments</h3>
-        <div class="kpi-assignments">
-          <div class="kpi-box">
+        <div class="kpi-assignments" *ngIf="selectedProfile.kpis?.length; else noKpi">
+          <div class="kpi-box" *ngFor="let kpi of selectedProfile.kpis">
             <div>
-              <strong>Claims Processing</strong>
-              <p>Range: 0-100</p>
+              <strong>{{ kpi.kpiName }}</strong>
+              <p>Range: {{ kpi.kpiMinRange }} - {{ kpi.kpiMaxRange }}</p>
             </div>
-            <strong>25%</strong>
-          </div>
-          <div class="kpi-box">
-            <div>
-              <strong>Claims Processing</strong>
-              <p>Range: 0-100</p>
-            </div>
-            <strong>25%</strong>
-          </div>
-          <div class="kpi-box">
-            <div>
-              <strong>Claims Processing</strong>
-              <p>Range: 0-100</p>
-            </div>
-            <strong>25%</strong>
+            <strong>{{ kpi.weightage }}%</strong>
           </div>
         </div>
+        <ng-template #noKpi>
+          <p>No KPIs assigned</p>
+        </ng-template>    
       </div>
+      </ng-container>
+
+      <!-- Else block if no profile is selected -->
+      <ng-template #noProfile>
+        <div class="profile-card-content"> 
+          <div class="search-icon">
+            <img src="assets/search-cicon.png" alt="No Profile">
+          </div>
+          <div class="no-profile-container">
+            <span>
+              No Profile Selected
+            </span>
+            <span>
+              Select a profile from the list to view its detailed configuration and KPI assignments.
+            </span>
+          </div>
+        </div>
+      </ng-template>
     </div>
+
   </div>
 </div>
 
-
-
-
-
-
-
-
+  
+</div>
 
 
 
@@ -270,22 +298,71 @@
         <div class="kpi-section">
           <h3>Add KPI to Profile</h3>
 
-          <div formArrayName="kpiAssignments">
-  <div *ngFor="let kpi of kpiAssignments.controls; let i = index" [formGroupName]="i" class="kpi-form-row">
-    <select formControlName="kpiId" class="form-control">
-      <option value="">Select KPI</option>
-      <option *ngFor="let k of kpiMasterList" [value]="k.id">{{ k.kpiName }}</option>
-    </select>
+          <div [formGroup]="newKpiForm" class="kpi-form-row">
+            <div class="kpi-form-firdiv">
+              <label>KPI</label>
+              <select formControlName="kpiId" class="form-control">
+                <option value="">Select KPI</option>
+                <option *ngFor="let k of kpiMasterList" [value]="k.id">
+                  {{ k.kpiName }}
+                </option>
+              </select>
+            </div>
 
-    <input type="number" formControlName="kpiMinRange" placeholder="Min" />
-    <input type="number" formControlName="kpiMaxRange" placeholder="Max" />
-    <input type="number" formControlName="kpiQualifyCriteria" placeholder="Qualify" />
-    <input type="number" formControlName="weightage" placeholder="%" />
+            <div class="kpi-form-secdiv">
+              <div>
+                <label>Min Score Range</label>
+                <input type="number" formControlName="kpiMinRange" placeholder="Min" />
+              </div>
+              <div>
+                <label>Max Score Range</label>
+                <input type="number" formControlName="kpiMaxRange" placeholder="Max" />
+              </div>
+              <div>
+                <label>Qualification Criteria</label>
+                <input
+                  type="number"
+                  formControlName="kpiQualifyCriteria"
+                  placeholder="Qualify"
+                />
+              </div>
+              <div>
+                <label>Weightage</label>
+                <input type="number" formControlName="weightage" placeholder="%" />
+              </div>
+            </div>
 
-    <button type="button" (click)="addKpiAssignment()" *ngIf="i === kpiAssignments.length - 1">+</button>
-    <button type="button" (click)="removeKpiAssignment(i)" *ngIf="kpiAssignments.length > 1">🗑️</button>
-  </div>
-</div>
+            <div class="kpi-form-thidiv">
+              <button type="button" (click)="addKpiAssignment()">
+                <img src="assets/plus.svg" alt="Add" />
+              </button>
+            </div>
+          </div>
+
+          <!-- 🟢 Preview Section Only -->
+          <div class="kpi-preview" *ngIf="kpiAssignments.length > 0 && previewShow">
+            <div
+              *ngFor="let kpi of kpiAssignments.value; let idx = index"     
+              class="preview-row"
+            >
+              <div *ngIf="kpi.kpiId" class="preview-align">
+                <div class="preview-info" >
+                  <strong>{{ getKpiNameById(kpi.kpiId) }}</strong>
+                  <p>
+                    Min Score: {{ kpi.kpiMinRange }},
+                    Max Score: {{ kpi.kpiMaxRange }},
+                    Qualification Criteria: {{ kpi.kpiQualifyCriteria }}
+                  </p>
+                </div>
+                <div class="preview-weight">
+                  <p>Weightage: {{ kpi.weightage }}%</p>
+                </div>
+                <button type="button" class="clear-btn" (click)="removeKpiAssignment(idx)">🗑️</button>              
+              </div>
+            </div>
+          </div>     
+
+          <!-- checking -->
         </div>
       </div>
 
@@ -300,3 +377,4 @@
   </div>
 </div>
 
+<app-toaster></app-toaster>

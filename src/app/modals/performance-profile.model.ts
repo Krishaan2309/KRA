@@ -39,10 +39,10 @@ export interface PerformanceProfile {
   id: string;
   profileName: string;
   profileDescription: string;
-  baseVariablePay: number;
+  baseVariablePay?: number;
   selfRatingEnabled: boolean;
   isActive: boolean;
   kpis: KPI[];
   kpiCount: number;
-  departmentGradeMappings: DepartmentGradeMapping[];
+  departmentGradeMappings?: DepartmentGradeMapping[];
 }

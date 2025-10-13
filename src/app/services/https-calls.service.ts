@@ -46,6 +46,10 @@ export class HttpsCallsService {
     return this.http.get<PerformanceProfile[]>(`${this.performanceProfileUrl}/with-kpis`);
   }
 
+    getPerformanceProfileById(id: string): Observable<PerformanceProfile> {
+      return this.http.get<PerformanceProfile>(`${this.performanceProfileUrl}/${id}/with-kpis`);
+    }
+
 
   getDepartments(): Observable<Department[]> {
     return this.http.get<Department[]>(`${environment.apiBaseUrl}/departments`);
