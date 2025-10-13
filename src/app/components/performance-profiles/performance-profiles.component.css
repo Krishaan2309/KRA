@@ -438,6 +438,15 @@ h2 {
   color: var(--muted);
 }
 
+.kpi-preview{
+  border-radius: 0.5rem;
+  border: 2px dashed var(--Gray-200, #E4E7EC);
+  background: var(--Gray-50, #F9FAFB);
+  padding: 1rem 1rem 0rem 1rem;  
+}
+
+
+
 /* ===== Modal ===== */
 .modal-overlay {
   position: fixed;
@@ -464,8 +473,7 @@ h2 {
 }
 
 .modal-header {
-  padding: 24px 32px 20px;
-  border-bottom: 1px solid #e5e7eb;
+  padding: 1rem 2rem 0rem 2rem;
 }
 
 .modal-header h2 {
@@ -556,10 +564,31 @@ h2 {
   margin-bottom: 16px;
 }
 
+.preview-info{
+  color: var(--Gray-800, #1D2939);
+}
+
+.dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background-color: var(--Gray-700, #344054);
+  border-radius: 50%;
+  vertical-align: middle; /* aligns nicely with text */
+  margin: 0 8px;
+}
+
+
+
 .preview-row{
   display: flex;
   justify-content: space-between;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
   align-items: center;
+  border-radius: 0.5rem;
+  border: 1px solid var(--Gray-300, #D0D5DD);
+  background: #FFF;  
 }
 
 .kpi-form-firdiv {
@@ -572,9 +601,12 @@ h2 {
 .kpi-form-firdiv label {
   display: block;
   margin-bottom: 6px;
-  font-size: 14px;
+  color: var(--Gray-700, #344054);
+  font-family: Inter;
+  font-size: 0.75rem;
+  font-style: normal;
   font-weight: 500;
-  color: #374151;
+  line-height: 1.125rem; /* 150% */
 }
 
 .kpi-form-firdiv select {
@@ -603,9 +635,12 @@ h2 {
 .kpi-form-secdiv label {
   display: block;
   margin-bottom: 6px;
-  font-size: 14px;
+  color: var(--Gray-700, #344054);
+  font-family: Inter;
+  font-size: 0.75rem;
+  font-style: normal;
   font-weight: 500;
-  color: #374151;
+  line-height: 1.125rem; /* 150% */
   white-space: nowrap;
 }
 
@@ -631,11 +666,33 @@ h2 {
 
 .preview-weight{
   display: flex;
-  align-items: end;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.preview-weight span:first-of-type{
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--Gray-200, #E4E7EC);
+  background: var(--Gray-100, #F2F4F7);
+}
+
+.preview-weight p{
+  color: var(--Gray-800, #1D2939);
+  font-family: Inter;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.5rem;
 }
 
 .clear-btn{
+  border-radius: 0.5rem;
+  background: var(--Error-50, #FEF3F2);
   height: fit-content;
+  padding: 0.5rem;
+  border: none;
+  width: 2.8rem;
 }
 
 .kpi-form-thidiv {

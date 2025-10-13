@@ -8,6 +8,7 @@ import { Department } from 'src/app/modals/department.model';
 import { Grade } from 'src/app/modals/grade.model';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { ToastService } from 'src/app/services/toaster.service';
+import { AbstractControl, ValidationErrors } from '@angular/forms';
 
 @Component({
   selector: 'app-performance-profiles',
@@ -24,8 +25,10 @@ export class PerformanceProfilesComponent {
   levels: Grade[] = [];
   createProfileForm!: FormGroup;
   newKpiForm!: FormGroup;
-  
+  isEditMode= false;
+selectedProfile: PerformanceProfile | null = null;
   showCreateProfile = false;
+  tempProfileId : string ='';
   rows = 10;
   selectedStatus = '';
   actionOptions = [
@@ -58,9 +61,10 @@ export class PerformanceProfilesComponent {
       profileDescription: ['', Validators.required],
       selfRatingEnabled: [true],
       isActive: [true],
+      baseVariablePay: ['', Validators.required],
       departmentId: ['', Validators.required],
       gradeId: ['', Validators.required],
-      kpiAssignments: this.fb.array([])
+      kpiAssignments: this.fb.array([],this.minFormArrayLength(1))
     });
   }
 
@@ -69,8 +73,8 @@ export class PerformanceProfilesComponent {
       kpiId: ['', Validators.required],
       weightage: [0, [Validators.required, Validators.min(1), Validators.max(100)]],
       kpiMinRange: [0, [Validators.required, Validators.min(0)]],
-      kpiMaxRange: [100, [Validators.required, Validators.min(1)]],
-      kpiQualifyCriteria: [80, [Validators.required, Validators.min(0), Validators.max(100)]],
+      kpiMaxRange: [0, [Validators.required, Validators.min(1)]],
+      kpiQualifyCriteria: [0, [Validators.required, Validators.min(0), Validators.max(100)]],
       isActive: [true]
     });
   }
@@ -88,7 +92,7 @@ export class PerformanceProfilesComponent {
   }
 
   /** 🔹 Get KPI FormArray */
-  get kpiAssignments(): FormArray {
+  get kpiAssignments(): FormArray {7
     return this.createProfileForm.get('kpiAssignments') as FormArray;
   }
 
@@ -171,7 +175,7 @@ export class PerformanceProfilesComponent {
     this.dt.filterGlobal(input.value, matchMode);
   }
 
-selectedProfile: PerformanceProfile | null = null;
+
 
 selectAction(option: any, profile: PerformanceProfile, op?: OverlayPanel) {
   if (op) {
@@ -181,9 +185,10 @@ selectAction(option: any, profile: PerformanceProfile, op?: OverlayPanel) {
   if (option.label === 'View Details') {
     this.viewProfileDetails(profile.id);
   } else if (option.label === 'Edit Profile') {
-    // this.editProfile(profile.id);
+    this.editProfileDetails(profile.id);
   }
 }
+
 
 viewProfileDetails(profileId: string) {
   this.httpsCallApi.getPerformanceProfileById(profileId).subscribe({
@@ -196,14 +201,130 @@ viewProfileDetails(profileId: string) {
   });
 }
 
+// ✅ Load data into form for editing
+editProfileDetails(profileId: string) {
+  this.openModal();
+
+  this.tempProfileId = profileId;
+  this.httpsCallApi.getPerformanceProfileById(profileId).subscribe({
+    next: (data) => {
+      this.selectedProfile = data;
+      const mapping = data.departmentGradeMappings?.[0];
+
+      // 📝 Patch basic fields
+      this.createProfileForm.patchValue({
+        profileName: data.profileName,
+        profileDescription: data.profileDescription,
+        selfRatingEnabled: data.selfRatingEnabled,
+        isActive: data.isActive,
+        baseVariablePay: data.baseVariablePay,
+        departmentId: mapping?.departmentId || '',
+        gradeId: mapping?.gradeId || '',
+      });
+
+      // 📝 Clear old KPI assignments
+      this.kpiAssignments.clear();
+
+      // 📝 Patch all KPIs from the selected profile
+      if (data.kpis?.length) {
+        data.kpis.forEach((kpi: any) => {
+          this.kpiAssignments.push(
+            this.fb.group({
+              kpiId: kpi.kpiId || kpi.id,
+              weightage: kpi.weightage,
+              kpiMinRange: kpi.kpiMinRange,
+              kpiMaxRange: kpi.kpiMaxRange,
+              kpiQualifyCriteria: kpi.kpiQualifyCriteria,
+              isActive: kpi.isActive
+            })
+          );
+        });
+      }
+
+      this.previewShow = this.kpiAssignments.length > 0;
+      console.log('Selected Profile For Edit:', data);
+    },
+    error: (err) => console.error('Failed to load profile for edit:', err),
+  });
+}
+
+
+onSubmit() {
+  if (this.isEditMode) {
+    this.editExistingProfile();
+  } else {
+    this.onCreateProfile();
+  }
+}
+
+editExistingProfile() {
+  if (this.createProfileForm.invalid) {
+    this.createProfileForm.markAllAsTouched();
+    return;
+  }
+
+  if (!this.tempProfileId) {
+    console.error('Profile ID missing for update');
+    return;
+  }
+
+  const formValue = this.createProfileForm.value;
+
+  // 🛠️ Map KPI assignments properly
+  const formattedKpis = formValue.kpiAssignments.map((kpi: any) => ({
+    kpiId: kpi.kpiId,
+    weightage: kpi.weightage,
+    kpiMinRange: kpi.kpiMinRange,
+    kpiMaxRange: kpi.kpiMaxRange,
+    kpiQualifyCriteria: kpi.kpiQualifyCriteria,
+    isActive: true  // ensure it's active on update
+  }));
+
+  const payload = {
+    profileName: formValue.profileName,
+    profileDescription: formValue.profileDescription,
+    baseVariablePay: formValue.baseVariablePay,
+    selfRatingEnabled: formValue.selfRatingEnabled,
+    isActive: formValue.isActive,
+    kpiAssignments: formattedKpis,
+    departmentGradeMappings: [
+      {
+        departmentId: formValue.departmentId,
+        gradeId: formValue.gradeId,
+        isActive: true,
+      },
+    ],
+  };
+
+  console.log('Update Payload:', payload);
+
+  this.httpsCallApi.updatePerformanceProfile(this.tempProfileId, payload).subscribe({
+    next: (res) => {
+      console.log('Profile updated successfully:', res);
+      this.toasterService.show('Profile Updated', 'success', 'The Profile was updated successfully');
+      this.fetchProfiles();
+      this.closeModal();
+      this.isEditMode = false;
+      this.tempProfileId = '';
+    },
+    error: (err) => {
+      console.error('Failed to update profile:', err);
+      this.toasterService.show('Update Failed', 'error', 'Failed to update the profile');
+    },
+  });
+}
+
+
 
   /** 🔹 Modal */
   openModal() {
     this.initForm(); // reset with fresh FormArray
+    this.initNewKpiForm();
     this.showCreateProfile = true;
   }
 
   closeModal() {
+      this.isEditMode = false;
     this.showCreateProfile = false;
   }
 
@@ -219,14 +340,15 @@ viewProfileDetails(profileId: string) {
     if (this.createProfileForm.invalid) {
       this.createProfileForm.markAllAsTouched();
       console.log('Invalid')
+      
       return;
     }  
     const formValue = this.createProfileForm.value;
-
+    this.isEditMode = false;
     const payload = {
       profileName: formValue.profileName,
       profileDescription: formValue.profileDescription,
-      baseVariablePay: 0, 
+      baseVariablePay: formValue.baseVariablePay, 
       selfRatingEnabled: formValue.selfRatingEnabled,
       isActive: formValue.isActive,
       kpiAssignments: formValue.kpiAssignments,
@@ -245,6 +367,7 @@ viewProfileDetails(profileId: string) {
       next: (res) => {
         console.log('Profile created successfully:', res);
         this.toasterService.show('Profile Created','success','The Profile Created Successfully');
+        console.log("Form Values : ",formValue)
         this.fetchProfiles();
         this.closeModal();
       },
@@ -253,4 +376,14 @@ viewProfileDetails(profileId: string) {
       }
     });
   }
+
+  minFormArrayLength(min: number) {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const arr = control as any;
+      return arr && arr.length >= min
+        ? null
+        : { minLengthArray: { requiredLength: min, actualLength: arr ? arr.length : 0 } };
+    };
+  }
+
 }

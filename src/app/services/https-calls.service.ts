@@ -62,4 +62,10 @@ export class HttpsCallsService {
   createPerformanceProfile(payload: any): Observable<any> {
     return this.http.post(`${environment.apiBaseUrl}/performance-profiles/with-kpis`, payload);
   }
+
+  updatePerformanceProfile(id: string, payload: any): Observable<any> {
+    return this.http.post(`${environment.apiBaseUrl}/performance-profiles/${id}/with-kpis/update`, payload);
+  }
+
+
 }
