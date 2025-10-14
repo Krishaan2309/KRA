@@ -85,8 +85,8 @@ selectedProfile: PerformanceProfile | null = null;
       kpiId: ['', Validators.required],
       weightage: [0, [Validators.required, Validators.min(1), Validators.max(100)]],
       kpiMinRange: [0, [Validators.required, Validators.min(0)]],
-      kpiMaxRange: [100, [Validators.required, Validators.min(1)]],
-      kpiQualifyCriteria: [80, [Validators.required, Validators.min(0), Validators.max(100)]],
+      kpiMaxRange: [0, [Validators.required, Validators.min(1)]],
+      kpiQualifyCriteria: [0, [Validators.required, Validators.min(0), Validators.max(100)]],
       isActive: [true]
     });
   }
@@ -124,8 +124,8 @@ selectedProfile: PerformanceProfile | null = null;
     kpiId: '',
     weightage: 0,
     kpiMinRange: 0,
-    kpiMaxRange: 100,
-    kpiQualifyCriteria: 80,
+    kpiMaxRange: 0,
+    kpiQualifyCriteria: 0,
     isActive: true
   });
   this.previewShow = true;
@@ -204,7 +204,7 @@ viewProfileDetails(profileId: string) {
 // ✅ Load data into form for editing
 editProfileDetails(profileId: string) {
   this.openModal();
-  this.isEditMode = true;
+
   this.tempProfileId = profileId;
   this.httpsCallApi.getPerformanceProfileById(profileId).subscribe({
     next: (data) => {
@@ -305,7 +305,10 @@ editExistingProfile() {
       this.fetchProfiles();
       this.closeModal();
       this.isEditMode = false;
+      this.viewProfileDetails(this.tempProfileId);
       this.tempProfileId = '';
+      // this.editProfileDetails(this.tempProfileId);
+      
     },
     error: (err) => {
       console.error('Failed to update profile:', err);
@@ -342,7 +345,8 @@ editExistingProfile() {
       console.log('Invalid')
       
       return;
-    }  
+    }
+
     const formValue = this.createProfileForm.value;
     this.isEditMode = false;
     const payload = {
@@ -360,10 +364,14 @@ editExistingProfile() {
         },
       ],
     };
-
-    console.log('POST Payload:', payload);
-
-    this.httpsCallApi.createPerformanceProfile(payload).subscribe({
+    const isUniqueDepartmentGradeLevel = this.isUniqueDepartmentGrade(this.performanceProfiles, payload);
+    if (!isUniqueDepartmentGradeLevel) {
+      this.toasterService.show('Profile not Created','info','Department + Grade combination already exists!');
+      console.log("❌ Department + Grade combination already exists!");
+    } else {
+      console.log('POST Payload:', payload);
+      console.log("✅ Department + Grade combination is unique, can proceed.");
+      this.httpsCallApi.createPerformanceProfile(payload).subscribe({
       next: (res) => {
         console.log('Profile created successfully:', res);
         this.toasterService.show('Profile Created','success','The Profile Created Successfully');
@@ -375,6 +383,12 @@ editExistingProfile() {
       this.toasterService.show('Failed to Create','error','The Profile Creation failed');
       }
     });
+    }
+
+    
+    
+
+    
   }
 
   minFormArrayLength(min: number) {
@@ -385,5 +399,36 @@ editExistingProfile() {
         : { minLengthArray: { requiredLength: min, actualLength: arr ? arr.length : 0 } };
     };
   }
+
+  isUniqueDepartmentGrade(
+  masterArray: any[],
+  postResponse: any
+): boolean {
+  // Extract departmentId and gradeId from postResponse
+  const { departmentGradeMappings } = postResponse;
+  if (!departmentGradeMappings || departmentGradeMappings.length === 0) {
+    return true; // nothing to validate
+  }
+
+  const { departmentId, gradeId } = departmentGradeMappings[0];
+
+  // Loop through master array
+  for (const profile of masterArray) {
+    for (const mapping of profile.departmentGradeMappings || []) {
+      if (
+        mapping.departmentId === departmentId &&
+        mapping.gradeId === gradeId &&
+        mapping.isActive
+      ) {
+        // Found a match
+        return false;
+      }
+    }
+  }
+
+  // No match found
+  return true;
+}
+
 
 }

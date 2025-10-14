@@ -32,14 +32,14 @@
       </span>
 
       <div class="dropdowns">
-        <select
+        <!-- <select
           [(ngModel)]="selectedStatus"
           (change)="dt.filter(selectedStatus, 'isActive', 'equals')"
         >
           <option value="">All Status</option>
           <option value="true">Active</option>
           <option value="false">Inactive</option>
-        </select>
+        </select> -->
 
         <p-dropdown
           class="dropdown-container"
@@ -389,7 +389,7 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-cancel" (click)="closeModal()">Cancel</button>
         <button type="submit" class="btn btn-create" [disabled]="createProfileForm.invalid">
-        {{isEditMode ?'Edit Profile': 'Create Profile'}}
+        {{isEditMode ?'Update Profile': 'Create Profile'}}
         </button>
       </div>
     </form>
