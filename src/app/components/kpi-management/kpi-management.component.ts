@@ -150,6 +150,14 @@ isActionSelected(option: any, kpi: Kpi): boolean {
               }
               console.log('✅ KPI created successfully:', response);
               this.toaster.show('The kpi is successfully created', "success", 'KPI Created');
+              this.httpsCallApi.getStatistics().subscribe({
+      next: (res) => {
+        this.stats = res;
+      },
+      error: (err) => {
+        console.error('Error fetching statistics', err);
+      }
+    });
             },
             error: (err) => {
               console.error('❌ Error refreshing KPI list:', err);
@@ -249,6 +257,14 @@ updateKpi() {
               this.dt.reset();
             }
             this.toaster.show('KPI updated successfully', 'success', 'KPI Updated');
+            this.httpsCallApi.getStatistics().subscribe({
+              next: (res) => {
+                this.stats = res;
+              },
+              error: (err) => {
+                console.error('Error fetching statistics', err);
+              }
+            });
           },
           error: (err) => {
             this.toaster.show('Failed to refresh KPI list', 'error', 'Error');
