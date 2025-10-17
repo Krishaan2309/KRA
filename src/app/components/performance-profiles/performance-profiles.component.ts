@@ -204,7 +204,7 @@ viewProfileDetails(profileId: string) {
 // ✅ Load data into form for editing
 editProfileDetails(profileId: string) {
   this.openModal();
-  this.isEditMode=true;
+
   this.tempProfileId = profileId;
   this.httpsCallApi.getPerformanceProfileById(profileId).subscribe({
     next: (data) => {
