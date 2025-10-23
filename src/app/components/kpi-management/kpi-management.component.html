@@ -115,7 +115,7 @@
     <ng-template pTemplate="header">
       <tr>
         <th>KPI Name</th>
-        <th>KPI Code</th>
+        <!-- <th>KPI Code</th> -->
         <th>Category</th>
         <th>Unit</th>
         <th>Formula</th>
@@ -132,7 +132,7 @@
             <span class="kpi-description">{{ kpi.kpiDescription }}</span>
           </span>
         </td>
-        <td>{{ kpi.kpiCode }}</td>
+        <!-- <td>{{ kpi.kpiCode }}</td> -->
         <td>{{ kpi.kpiCategory }}</td>
         <td>{{ kpi.measurementUnit }}</td>
         <td>{{ kpi.formulaCode | uppercase}}</td>
@@ -146,6 +146,7 @@
           </span> 
         </td>-->
       <td>
+        
       <p-overlayPanel #op styleClass="actions-overlay">
         <div class="action-options-container">
           <ng-container *ngFor="let option of actionOptions">
@@ -157,7 +158,7 @@
               <div class="toggle-wrapper">
                 <input 
                   type="radio" 
-                  [name]="'action-toggle-' + kpi.kpiCode"
+                  [name]="'action-toggle-' + kpi.kpiId"
                   [checked]="isActionSelected(option, kpi)"
                   class="toggle-input"
                 />
@@ -199,21 +200,11 @@
 
     <form [formGroup]="kpiForm" (ngSubmit)="submitKpi()">
       <!-- KPI Name -->
-      <div class="form-row">
-        <label>KPI Name<span class="required">*</span></label>
-        <input
-          type="text"
-          placeholder="eg: Claims Denial Rate..."
-          formControlName="kpiName"
-        />
-        <small class="error" *ngIf="isInvalid('kpiName')">
-          KPI Name is required.
-        </small>
-      </div>
+
 
       <!-- KPI Code + Category -->
       <div class="form-grid">
-        <div class="form-row">
+        <!-- <div class="form-row">
           <label>KPI Code<span class="required">*</span></label>
           <input
             type="text"
@@ -223,7 +214,19 @@
           <small class="error" *ngIf="isInvalid('kpiCode')">
             KPI Code is required.
           </small>
-        </div>
+        </div> -->
+
+      <div class="form-row">
+        <label>KPI Name<span class="required">*</span></label>
+        <input
+          type="text"
+          placeholder="eg: Production ..."
+          formControlName="kpiName"
+        />
+        <small class="error" *ngIf="isInvalid('kpiName')">
+          KPI Name is required.
+        </small>
+      </div>
 
         <div class="form-row">
           <label>Category<span class="required">*</span></label>
@@ -243,7 +246,7 @@
       <div class="form-row">
         <label>Description<span class="required">*</span></label>
         <textarea
-          placeholder="eg: Percentage of claims denied..."
+          placeholder="eg: Productivity of an individual average..."
           formControlName="kpiDescription"
         ></textarea>
         <small class="error" *ngIf="isInvalid('kpiDescription')">
@@ -254,25 +257,26 @@
       <!-- Formula + Unit -->
       <div class="form-grid">
         <div class="form-row">
-  <label>Formula Type<span class="required">*</span></label>
-  <select formControlName="formulaCode">
-    <option value="" class="default-select">Select Formula</option>
-    <option *ngFor="let option of formulaOptions" [value]="option.value">
-      {{ option.label }}
-    </option>
-  </select>
-  <small class="error" *ngIf="isInvalid('formulaCode')">
-    Formula Type is required.
-  </small>
-</div>
+          <label>Formula Type<span class="required">*</span></label>
+          <select formControlName="formulaCode">
+            <option value="" class="default-select">Select Formula</option>
+            <option *ngFor="let option of formulaOptions" [value]="option.value">
+              {{ option.label }}
+            </option>
+          </select>
+          <small class="error" *ngIf="isInvalid('formulaCode')">
+            Formula Type is required.
+          </small>
+        </div>
 
         <div class="form-row">
           <label>Measurement Unit<span class="required">*</span></label>
-          <input
-            type="text"
-            placeholder="eg: Claims/Day"
-            formControlName="measurementUnit"
-          />
+          <select formControlName="measurementUnit">
+            <option value="" class="default-select">Select Unit</option>
+            <option *ngFor="let option of measurementUnitOptions" [value]="option.value">
+              {{ option.label }}
+            </option>
+          </select>
           <small class="error" *ngIf="isInvalid('measurementUnit')">
             Measurement Unit is required.
           </small>

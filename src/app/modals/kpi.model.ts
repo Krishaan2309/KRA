@@ -10,4 +10,4 @@ export interface Kpi {
   profileCount: number;
 }
 
-export type KpiPayload = Omit<Kpi, 'id' | 'profileCount'>;
+export type KpiPayload = Omit<Kpi,'id'| 'profileCount'>;

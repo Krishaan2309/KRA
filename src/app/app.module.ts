@@ -21,9 +21,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { RippleModule } from 'primeng/ripple';
 import { ReviewApproveComponent } from './components/review-approve/review-approve.component';
-
-
-
+import { MultiSelectModule } from 'primeng/multiselect';
 
 
 @NgModule({
@@ -50,7 +48,9 @@ import { ReviewApproveComponent } from './components/review-approve/review-appro
     InputTextModule,
     DropdownModule,
     RippleModule,
-     OverlayPanelModule,  
+    OverlayPanelModule,  
+    MultiSelectModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

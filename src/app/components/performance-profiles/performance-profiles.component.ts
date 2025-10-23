@@ -9,6 +9,8 @@ import { Grade } from 'src/app/modals/grade.model';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { ToastService } from 'src/app/services/toaster.service';
 import { AbstractControl, ValidationErrors } from '@angular/forms';
+import { MultiSelectModule  } from 'primeng/multiselect';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-performance-profiles',
@@ -26,11 +28,14 @@ export class PerformanceProfilesComponent {
   createProfileForm!: FormGroup;
   newKpiForm!: FormGroup;
   isEditMode= false;
-selectedProfile: PerformanceProfile | null = null;
+  selectedProfile: PerformanceProfile | null = null;
   showCreateProfile = false;
   tempProfileId : string ='';
   rows = 10;
   selectedStatus = '';
+  totalWeightage:number[] = [];
+  hundredCheck = 0;
+  balanceWeightage = 0;
   actionOptions = [
     { label: 'Edit Profile' },
     { label: 'View Details' },
@@ -62,8 +67,8 @@ selectedProfile: PerformanceProfile | null = null;
       selfRatingEnabled: [true],
       isActive: [true],
       baseVariablePay: ['', Validators.required],
-      departmentId: ['', Validators.required],
-      gradeId: ['', Validators.required],
+      departmentId: [[], Validators.required],
+      gradeId: [[], Validators.required],
       kpiAssignments: this.fb.array([],this.minFormArrayLength(1))
     });
   }
@@ -101,63 +106,136 @@ selectedProfile: PerformanceProfile | null = null;
     return found ? found.kpiName : 'Not Selected';
   }
 
+  weightageCheck(weightageValue: number): boolean {
+    // Calculate current total weightage
+    const currentTotal = this.totalWeightage.reduce((acc, val) => acc + val, 0);
 
-  /** 🔹 Add KPI row */
+    // Check if adding this value exceeds 100
+    if (currentTotal + weightageValue > 100) {
+      this.balanceWeightage = 100 - currentTotal; // how much is left
+      return false;
+    }
+
+    // Add value if valid
+    this.totalWeightage.push(weightageValue);
+
+    // Update totals
+    this.hundredCheck = currentTotal + weightageValue;
+    this.balanceWeightage = 100 - this.hundredCheck;
+
+    return true;
+  }
+
+
   addKpiAssignment() {
-   if (this.newKpiForm.invalid) {
-    this.toasterService.show('Please fill all KPI values correctly','info','Fields Required');
-    return;
+    if (this.newKpiForm.invalid) {
+      this.toasterService.show('Please fill all KPI values correctly', 'info', 'Fields Required');
+      return;
+    }
+
+    const newKpi = this.newKpiForm.value;
+    const weightageValue: number = Number(this.newKpiForm.get('weightage')?.value) || 0;
+
+    // Prevent duplicate KPI
+    const existingKpi = this.kpiAssignments.value.find(
+      (k: any) => k.kpiId === newKpi.kpiId
+    );
+    if (existingKpi) {
+      this.toasterService.show('This KPI is already added', 'info', 'Duplicate KPI');
+      return;
+    }
+
+    // Check weightage validity
+    if (!this.weightageCheck(weightageValue)) {
+      if(this.balanceWeightage === 0){
+        this.toasterService.show(
+        `Weightage Value Exceeds max limit`,
+        'info',
+        'Weightage Exceeds'
+        );        
+      }else{
+      this.toasterService.show(
+        `Weightage Value should be ${this.balanceWeightage} or below `,
+        'info',
+        'Weightage Exceeds'
+        );           
+      }
+      
+      return;
+    }
+
+    // Add KPI
+    this.kpiAssignments.push(this.fb.group(newKpi));
+
+    // Reset form
+    this.newKpiForm.reset({
+      kpiId: '',
+      weightage: 0,
+      kpiMinRange: 0,
+      kpiMaxRange: 0,
+      kpiQualifyCriteria: 0,
+      isActive: true
+    });
+
+    this.previewShow = true;
+
+    console.log('✅ Total Weightage:', this.totalWeightage);
+    console.log('🧮 Used Weightage:', this.hundredCheck);
+    console.log('🪙 Remaining Weightage:', this.balanceWeightage);
   }
 
-  // Check for duplicate KPI
-  const existingKpi = this.kpiAssignments.value.find(
-    (k: any) => k.kpiId === this.newKpiForm.value.kpiId
-  );
-  
-  if (existingKpi) {
-    this.toasterService.show('This KPI is already added','info','Duplicate Kpi');
-    return;
-  }
-
-  this.kpiAssignments.push(this.fb.group(this.newKpiForm.value));
-  this.newKpiForm.reset({
-    kpiId: '',
-    weightage: 0,
-    kpiMinRange: 0,
-    kpiMaxRange: 0,
-    kpiQualifyCriteria: 0,
-    isActive: true
-  });
-  this.previewShow = true;
-  }
 
 
   /** 🔹 Remove KPI row */
   removeKpiAssignment(index: number) {
+
+    this.totalWeightage.splice(index, 1);
+
+    // 2. Remove KPI from FormArray
     this.kpiAssignments.removeAt(index);
+
+    // 3. Recalculate hundredCheck & balanceWeightage
+    this.hundredCheck = this.totalWeightage.reduce((acc, val) => acc + val, 0);
+    this.balanceWeightage = 100 - this.hundredCheck;
   }
 
   /** 🔹 API Calls */
   loadKpiMaster(): void {
     this.httpsCallApi.getKpiMaster().subscribe({
-      next: (data) => (this.kpiMasterList = data),
-      error: (err) => console.error('KPI Master API error:', err),
+      next: (data) => {
+        this.kpiMasterList = Array.isArray(data) ? data : [];
+      },
+      error: (err) => {
+        console.error('KPI Master API error:', err);
+        this.kpiMasterList = [];
+      },
     });
   }
 
   loadDepartments(): void {
     this.httpsCallApi.getDepartments().subscribe({
-      next: (data) => (this.departments = data),
-      error: (err) => console.error('Departments API error:', err),
+      next: (data) => {
+        this.departments = Array.isArray(data) ? data : [];
+      },
+      error: (err) => {
+        console.error('Departments API error:', err);
+        this.departments = [];
+      },
     });
   }
 
   loadLevels(): void {
     this.httpsCallApi.getLevels().subscribe({
-      next: (data) => (this.levels = data),
-      error: (err) => console.error('Levels API error:', err),
+      next: (data) => {
+        this.levels = Array.isArray(data) ? data : [];
+      },
+      error: (err) => {
+        console.error('Levels API error:', err);
+        this.levels = [];
+      },
     });
   }
+
 
   fetchProfiles(): void {
     this.httpsCallApi.getPerformanceProfiles().subscribe({
@@ -204,7 +282,7 @@ viewProfileDetails(profileId: string) {
 // ✅ Load data into form for editing
 editProfileDetails(profileId: string) {
   this.openModal();
-
+  this.isEditMode = true;
   this.tempProfileId = profileId;
   this.httpsCallApi.getPerformanceProfileById(profileId).subscribe({
     next: (data) => {
@@ -218,8 +296,8 @@ editProfileDetails(profileId: string) {
         selfRatingEnabled: data.selfRatingEnabled,
         isActive: data.isActive,
         baseVariablePay: data.baseVariablePay,
-        departmentId: mapping?.departmentId || '',
-        gradeId: mapping?.gradeId || '',
+        departmentId: mapping?.departmentId ? [mapping.departmentId] : [],
+        gradeId: mapping?.gradeId ? [mapping.gradeId] : [],
       });
 
       // 📝 Clear old KPI assignments
@@ -327,7 +405,7 @@ editExistingProfile() {
   }
 
   closeModal() {
-      this.isEditMode = false;
+    this.isEditMode = false;
     this.showCreateProfile = false;
   }
 
@@ -358,37 +436,41 @@ editExistingProfile() {
       kpiAssignments: formValue.kpiAssignments,
       departmentGradeMappings: [
         {
-          departmentId: formValue.departmentId,
-          gradeId: formValue.gradeId,
+          departmentId: formValue.departmentId[0] || '', // pick first selected ID
+          gradeId: formValue.gradeId[0] || '',
           isActive: true,
         },
       ],
     };
-    const isUniqueDepartmentGradeLevel = this.isUniqueDepartmentGrade(this.performanceProfiles, payload);
-    if (!isUniqueDepartmentGradeLevel) {
-      this.toasterService.show('Profile not Created','info','Department + Grade combination already exists!');
-      console.log("❌ Department + Grade combination already exists!");
-    } else {
-      console.log('POST Payload:', payload);
-      console.log("✅ Department + Grade combination is unique, can proceed.");
-      this.httpsCallApi.createPerformanceProfile(payload).subscribe({
-      next: (res) => {
-        console.log('Profile created successfully:', res);
-        this.toasterService.show('Profile Created','success','The Profile Created Successfully');
-        console.log("Form Values : ",formValue)
-        this.fetchProfiles();
-        this.closeModal();
-      },
-      error: (err) => {console.error('Failed to create profile:', err);
-      this.toasterService.show('Failed to Create','error','The Profile Creation failed');
-      }
-    });
+
+    const isUnique = this.isUniqueDepartmentGrade(this.performanceProfiles, payload);
+  if (!isUnique) {
+    this.toasterService.show(
+      'Profile not Created',
+      'info',
+      'Department + Grade combination already exists!'
+    );
+    console.warn('❌ Department + Grade combination already exists!');
+    return;
+  }
+
+  console.log('📤 POST Payload:', payload);
+  console.log('✅ Department + Grade combination is unique, proceeding...');
+
+  this.httpsCallApi.createPerformanceProfile(payload).subscribe({
+    next: (res) => {
+      console.log('✅ Profile created successfully:', res);
+      this.toasterService.show('Profile Created', 'success', 'The Profile was created successfully');
+      console.log('📝 Form Values:', formValue);
+      this.fetchProfiles();
+      this.closeModal();
+    },
+    error: (err) => {
+      console.error('❌ Failed to create profile:', err);
+      this.toasterService.show('Failed to Create', 'error', 'The Profile Creation failed');
     }
+  });
 
-    
-    
-
-    
   }
 
   minFormArrayLength(min: number) {
