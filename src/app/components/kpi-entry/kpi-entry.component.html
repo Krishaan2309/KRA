@@ -5,6 +5,14 @@
     <button class="tab">History</button>
     <button class="tab">Drafts</button>
     <button class="tab">Self Rating</button>
+    <!-- HTML -->
+<label class="toggle">
+  <input type="checkbox" class="toggle-input" (change)="onToggle($event)" />
+  <span class="toggle-track">
+    <span class="toggle-thumb"></span>
+  </span>
+</label>
+
   </div>
 
   <!-- Header -->
@@ -13,130 +21,107 @@
       <h1>KPI Entry</h1>
       <p>Enter actual performance values for Users</p>
     </div>
-    <div class="user-box">
-            <div>
-              <div class="avatar">
-                S
-              </div>
-              <div>
-                <span class="user-name">Sasidharan</span>
-                <span class="user-id">ASP1001 - L4</span>            
-              </div>
-            </div>
-            <div>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21" viewBox="0 0 20 21" fill="none">
-                <path d="M5 7.9668L10 12.9668L15 7.9668" stroke="#101828" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-    </div>
+    
+  <div class="user-box" (click)="toggleDropdown()" #userBox *ngIf="!selfRate">
+      <div>
+        <div class="avatar">{{selectedEmployee?.employeeName[0] || ''}}</div>
+        <div>
+          <span class="user-name">{{selectedEmployee?.employeeName || "Select Employee"}}</span>
+          <span class="user-id">{{selectedEmployee?.employeeCode}} {{ selectedEmployee?.gradeLevel}}</span>
+        </div>
+      </div>
+      <div *ngIf="!selfRate">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="21"
+          viewBox="0 0 20 21"
+          fill="none"
+          [ngClass]="{ 'rotate': isOpen }"
+        >
+          <path
+            d="M5 7.9668L10 12.9668L15 7.9668"
+            stroke="#101828"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </div>
+      <div class="dropdown-content" *ngIf="isOpen && !selfRate">
+        <div *ngFor="let emp of employees" (click)="selectEmployee(emp)">
+          {{ emp.employeeName }} - {{ emp.employeeCode }}
+        </div>
+      </div>
+  </div>
+
   </div>
 
   <div class="entry-layout">
     <!-- KPI Table -->
-    <div class="table-section">
-      <div class="table-wrap">
-        <table class="kpi-table">
-          <thead>
-            <tr>
-              <th>KPI Name</th>
-              <th>Weight</th>
-              <th>Target</th>
-              <th>Actual</th>
-              <th>Achieved%</th>
-              <th>PLIP Score</th>
-              <th>Weightage</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <strong>Claims Processing Volume</strong>
-                <p class="muted">Claims/Day • HIGHER_IS_BETTER</p>
-              </td>
-              <td>20%</td>
-              <td><input type="number" value="1000" /></td>
-              <td><input type="number" value="1000" /></td>
-              <td>100%</td>
-              <td>4</td>
-              <td>16%</td>
-              <td><span class="status completed">Completed</span></td>
-            </tr>
-            <tr>
-              <td>
-                <strong>Claims Denial Rate</strong>
-                <p class="muted">Percentage • LOWER_IS_BETTER</p>
-              </td>
-              <td>20%</td>
-              <td><input type="number" value="8.0" /></td>
-              <td><input type="number" value="10.5" /></td>
-              <td>76.2%</td>
-              <td>3</td>
-              <td>0%</td>
-              <td><span class="status completed">Completed</span></td>
-            </tr>
-            <tr>
-              <td>
-                <strong>Days in Accounts Receivable</strong>
-                <p class="muted">Days • LOWER_IS_BETTER</p>
-              </td>
-              <td>20%</td>
-              <td><input type="number" value="45" /></td>
-              <td><input type="number" value="38" /></td>
-              <td>118.4%</td>
-              <td>4</td>
-              <td>16%</td>
-              <td><span class="status completed">Completed</span></td>
-            </tr>
-            <tr>
-              <td>
-                <strong>Collection Rate</strong>
-                <p class="muted">Percentage • HIGHER_IS_BETTER</p>
-              </td>
-              <td>15%</td>
-              <td><input type="number" value="92.0" /></td>
-              <td><input type="number" value="88.0" /></td>
-              <td>95.7%</td>
-              <td>4</td>
-              <td>12%</td>
-              <td><span class="status completed">Completed</span></td>
-            </tr>
-            <tr>
-              <td>
-                <strong>Attendance Rate</strong>
-                <p class="muted">Percentage • HIGHER_IS_BETTER</p>
-              </td>
-              <td>10%</td>
-              <td><input type="number" value="95.0" /></td>
-              <td><input type="number" value="120" /></td>
-              <td>126.3%</td>
-              <td>5</td>
-              <td>10%</td>
-              <td><span class="status completed">Completed</span></td>
-            </tr>
-            <tr>
-              <td>
-                <strong>Budget Utilization</strong>
-                <p class="muted">Percentage • EQUAL_TO_TARGET</p>
-              </td>
-              <td>10%</td>
-              <td><input type="number" value="100.0" /></td>
-              <td><input type="number" value="100" /></td>
-              <td>100%</td>
-              <td>4</td>
-              <td>8%</td>
-              <td><span class="status completed">Completed</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+<div class="table-section">
+  <div class="table-wrap">
+    <table class="kpi-table">
+      <thead>
+        <tr>
+          <th>KPI</th>
+          <th>Weight</th>
+          <th>Target</th>
+          <th>Actual</th>
+          <th>Achieved%</th>
+          <th>PLIP Score</th>
+          <th>Weightage</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let kpi of kpiProfiles; let i = index">
+          <!-- KPI Name, Unit & Formula -->
+          <td>
+            <strong>{{ kpi.kpiName }}</strong>
+            <p class="muted">{{ kpi?.measurementUnit }} • {{ kpi?.formulaCode | uppercase }}</p>
+          </td>
 
-      <!-- Buttons -->
-      <div class="action-buttons">
-        <button class="btn-outline">Save as Draft</button>
-        <button class="btn-primary">Submit</button>
-      </div>
-    </div>
+          <!-- Weight -->
+          <td>{{ kpi.weightage }}%</td>
+
+          <!-- Target Input -->
+          <td>
+            <input type="number" #targetInput [value]="kpi.targetValue"/>
+          </td>
+
+          <!-- Actual Input -->
+          <td>
+            <input type="number" #actualInput [value]="kpi.actualValue"/>
+          </td>
+
+          <!-- Achieved % -->
+          <td>{{kpi?.achievedPercentage || 0}}%</td>
+
+          <!-- PLIP Score -->
+          <td>{{kpi?.plipScore}}</td>
+
+          <!-- Weightage -->
+          <td>{{kpi?.weightageAchieved}}%</td>
+
+          <!-- Status -->
+          <td>
+            <span class="status">
+              {{kpi?.entryStatus}}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="action-buttons">
+    <button class="btn-outline" (click)="submitKpiEvaluation('draft')">Save as Draft</button>
+    <button class="btn-primary" (click)="submitKpiEvaluation('submit')">Submit</button>
+  </div>
+</div>
+
 
     <!-- Sidebar -->
     <div class="sidebar">
@@ -146,78 +131,75 @@
         <h3>Current Summary</h3>
         <div class="summary-row">
           <span>Projected Pay</span>
-          <strong>₹620</strong>
+          <strong>₹6{{summary?.projectedPay || ''}}</strong>
         </div>
         <div class="summary-rows">
           <div class="left-row">
             <span>Total KPIs</span>
-            <strong>6</strong>              
+            <strong>{{summary?.totalKpis || ''}}</strong>              
           </div>
           <div class="right-row">
             <span>Completed</span>
-            <strong class="strong">6</strong>              
+            <strong class="strong">{{summary?.completedKpis || ''}}</strong>              
           </div>          
         </div>
         <div class="summary-rows">
           <div class="left-row">
             <span>Pending</span>
-            <strong>0</strong>             
+            <strong>{{summary?.pendingKpis || ''}}</strong>             
           </div>
           <div class="right-row">
-            <span>Total Weightage</span>
-            <span class="strong">62%</span>             
+            <span>Achieved Weightage</span>
+            <span class="strong">{{summary?.achievedWeightage}}%</span>             
           </div>          
         </div>
       </div>
 
-      <div class="summary-card">
-        <h3>Last Month Reference - Aug 25</h3>
-        <div class="reference-list">
-          <li>
-            <span class="head">Claims Processing Volume</span>
-            <div class="values">
-              <strong>20%</strong>
-              <span class="change">↑8%</span>
-            </div>
-          </li>
-          <li>
-            <span class="head right">Claims Denial Rate</span>
-            <div class="values right">
-              <span class="change">↑6%</span>
-              <strong>6%</strong>
-            </div>
-          </li>
-          <li>
-            <span class="head">Days in Accounts Receivable</span>
-            <div class="values">
-              <strong>30%</strong>
-              <span class="change">↑10%</span>
-            </div>
-          </li>
-          <li>
-            <span class="head right">Collection Rate</span>
-            <div class="values right">
-              <span class="change">↑12%</span>
-              <strong>12%</strong>
-            </div>
-          </li>
-          <li>
-            <span class="head">Attendance Rate</span>
-            <div class="values">
-              <strong>30%</strong>
-              <span class="change">↑10%</span>
+      <div class="summary-card" *ngIf="lastApprovedReference">
+  <h3>
+    Last Month Reference - {{ lastApprovedReference?.currentEvaluationMonth }} /
+    {{ lastApprovedReference?.currentEvaluationYear }}
+  </h3>
 
-            </div>
-          </li>
-          <li>
-            <span class="head right">Budget Utilization</span>
-            <div class="values right">
-              <span class="change">↑12%</span>
-              <strong>12%</strong>
-            </div>
-          </li>
+  <div class="reference-list">
+    <ng-container *ngFor="let ref of lastApprovedReference.kpiReferences; let i = index">
+      <li [class.right]="i % 2 === 1">
+        <span class="head" [class.right]="i % 2 === 1">{{ ref.kpiName }}</span>
+        <div class="values" [class.right]="i % 2 === 1">
+          <ng-container *ngIf="i % 2 === 0">
+            <strong>{{ ref.lastApprovedPercentage | number : '1.0-0' }}%</strong>
+            <span
+              class="change"
+              [ngClass]="{
+                'up': ref.changeDirection === 'up',
+                'down': ref.changeDirection === 'down'
+              }"
+            >
+              {{ ref.changeDirection === 'up' ? '↑' : '↓' }}
+              {{ ref.changeAmount | number : '1.0-0' }}%
+            </span>
+          </ng-container>
+
+          <ng-container *ngIf="i % 2 === 1">
+            <span
+              class="change"
+              [ngClass]="{
+                'up': ref.changeDirection === 'up',
+                'down': ref.changeDirection === 'down'
+              }"
+            >
+              {{ ref.changeDirection === 'up' ? '↑' : '↓' }}
+              {{ ref.changeAmount | number : '1.0-0' }}%
+            </span>
+            <strong>{{ ref.lastApprovedPercentage | number : '1.0-0' }}%</strong>
+          </ng-container>
         </div>
-      </div>
+      </li>
+    </ng-container>
+  </div>
+</div>
+
     </div>
   </div>
 </div>
+<app-toaster></app-toaster>

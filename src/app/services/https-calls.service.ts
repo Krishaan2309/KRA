@@ -7,6 +7,11 @@ import { PerformanceProfile } from '../modals/performance-profile.model';
 import { Department } from '../modals/department.model';
 import { Grade } from '../modals/grade.model';
 import { Kpi, KpiPayload } from '../modals/kpi.model';
+import { ManagerEmployees } from '../modals/manager-employee.model';
+import { KpiProfiles } from '../modals/kpi-profiles.model';
+import { UnifiedSubmitRequest } from '../modals/kpi-submission.model';
+import { EmployeeKpiSummary } from '../modals/employee-kpi-summary.model';
+import { LastApprovedReference } from '../modals/last-approved-reference.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +21,8 @@ export class HttpsCallsService {
   private baseUrl = `${environment.apiBaseUrl}/kpi-master`;
 
   private performanceProfileUrl = `${environment.apiBaseUrl}/performance-profiles`;
+
+  private employeeKPIDataUrl = `${environment.apiBaseUrl}/employee-kpi-data`;
 
   constructor(private http: HttpClient) {}
 
@@ -67,5 +74,36 @@ export class HttpsCallsService {
     return this.http.post(`${environment.apiBaseUrl}/performance-profiles/${id}/with-kpis/update`, payload);
   }
 
+
+  getEmployeesByManager(managerId: string): Observable<ManagerEmployees[]> {
+    const url = `${this.employeeKPIDataUrl}/manager/${managerId}/employees-with-profiles`;
+    return this.http.get<ManagerEmployees[]>(url);
+  }
+
+   getEmployeeKpis(employeeId: string, evaluationYear:number, evaluationMonth:number): Observable<KpiProfiles[]> {
+    const url = `${this.employeeKPIDataUrl}/employee/${employeeId}/kpi-list/${evaluationYear}/${evaluationMonth}`;
+    return this.http.get<KpiProfiles[]>(url);
+  }
+
+  getEmployeeCurrentSummary(employeeId: string, year: number, month: number): Observable<EmployeeKpiSummary> {
+    return this.http.get<EmployeeKpiSummary>(
+      `${this.employeeKPIDataUrl}/employee/${employeeId}/current-summary/${year}/${month}`
+    );
+  }
+
+  getLastApprovedReference(
+    employeeId: string,
+    currentYear: number,
+    currentMonth: number
+  ): Observable<LastApprovedReference> {
+    const url = `${this.employeeKPIDataUrl}/employee/${employeeId}/last-approved-reference`;
+    return this.http.get<LastApprovedReference>(
+      `${url}?currentEvaluationYear=${currentYear}&currentEvaluationMonth=${currentMonth}`
+    );
+  }
+
+  submitUnifiedKpi(payload: UnifiedSubmitRequest): Observable<any> {
+    return this.http.post(`${this.employeeKPIDataUrl}/unified-submit`, payload);
+  }
 
 }

@@ -285,7 +285,34 @@
   font-weight: 400;
   line-height: 1.125rem; /* 150% */
 }
+.dropdown-content {
+  display: block;
+  position: absolute;
+  top: calc(100% + 5px);
+  right: 0;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  min-width: 10rem;
+  z-index: 1000;
+}
 
+.dropdown-content div {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  color: #333;
+  font-size: 0.875rem;
+}
+
+.dropdown-content div:hover {
+  background: #f3f4f6;
+}
+
+svg.rotate {
+  transform: rotate(180deg);
+  transition: transform 0.2s ease;
+}
 /* Cards */
 .summary-card {
   /* width: 24rem; */
@@ -442,3 +469,101 @@
   .action-buttons { justify-content: stretch; }
   .btn-outline, .btn-primary { width: 100%; text-align: center; }
 }
+
+/* CSS */
+.toggle {
+  --width: 56px;      /* total track width */
+  --height: 30px;     /* total track height */
+  --gap: 10px;        /* gap between switch and text */
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap);
+  cursor: pointer;
+  user-select: none;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  font-size: 14px;
+}
+
+.toggle-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* Track */
+.toggle-track {
+  width: var(--width);
+  height: var(--height);
+  background: #d1d5db;           /* neutral gray */
+  border-radius: 999px;
+  position: relative;
+  transition: background 160ms ease, box-shadow 160ms ease;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06);
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Thumb */
+.toggle-thumb {
+  position: absolute;
+  top: 50%;
+  left: 4px;
+  transform: translateY(-50%);
+  width: calc(var(--height) - 8px);
+  height: calc(var(--height) - 8px);
+  background: #ffffff;
+  border-radius: 50%;
+  transition: left 180ms cubic-bezier(.2,.9,.3,1), transform 120ms;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.16);
+}
+
+/* Focus visible (keyboard) */
+.toggle-input:focus + .toggle-track {
+  box-shadow: 0 0 0 4px rgba(59,130,246,0.16);
+  outline: none;
+}
+
+/* Checked state */
+.toggle-input:checked + .toggle-track {
+  background: #34d399; /* green */
+  box-shadow: none;
+}
+
+.toggle-input:checked + .toggle-track .toggle-thumb {
+  left: calc(var(--width) - var(--height) + 4px);
+}
+
+/* On/Off label handling */
+.toggle-label {
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #374151; /* text color */
+  user-select: none;
+}
+
+.label-on,
+.label-off {
+  display: inline-block;
+}
+
+/* show only the correct label */
+.toggle-input:checked ~ .toggle-label .label-on  { display: inline; }
+.toggle-input:checked ~ .toggle-label .label-off { display: none;  }
+
+.toggle-input:not(:checked) ~ .toggle-label .label-on  { display: none;  }
+.toggle-input:not(:checked) ~ .toggle-label .label-off { display: inline; }
+
+/* Small helper: make the whole label clickable */
+.toggle { touch-action: manipulation; }
+
+/* Example: smaller size */
+/* .toggle.small { --width:44px; --height:24px; font-size:13px; } */
