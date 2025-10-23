@@ -22,11 +22,15 @@ export class KpiManagementComponent {
   selectedKpi: Kpi | null = null; // Use your actual KPI type if defined
 
    formulaOptions = [
-  { label: 'HIGHER_IS_BETTER', value: 'higher' },
-  { label: 'LOWER_IS_BETTER', value: 'lower' },
-  { label: 'EQUAL_TO_TARGET', value: 'equal' }
-];
+      { label: 'HIGHER_IS_BETTER', value: 'higher' },
+      { label: 'LOWER_IS_BETTER', value: 'lower' },
+      { label: 'EQUAL_TO_TARGET', value: 'equal' }
+    ];
 
+    measurementUnitOptions = [
+      { label: 'Cliams', value: 'claims'},
+      { label: 'Days' , value: 'days'}
+    ];
 
   selectedCategory: string = '';
   selectedFormula: string = '';
@@ -37,7 +41,7 @@ export class KpiManagementComponent {
   ){
     this.kpiForm = this.fb.group({
       kpiName: ['', Validators.required],
-      kpiCode: ['', Validators.required],
+      // kpiCode: ['', Validators.required],
       kpiCategory: ['', Validators.required],
       kpiDescription: ['', Validators.required],
       formulaCode: ['', Validators.required],
@@ -61,7 +65,7 @@ actionOptions = [
 
 // Add these methods to your component class
 selectAction(option: any, kpi: Kpi) {
-  this.selectedActions[kpi.kpiCode] = option.id;
+  this.selectedActions[kpi.id] = option.id;
   
   if (option.id === 'edit') {
     this.onEdit(kpi);
@@ -71,7 +75,7 @@ selectAction(option: any, kpi: Kpi) {
 }
 
 isActionSelected(option: any, kpi: Kpi): boolean {
-  return this.selectedActions[kpi.kpiCode] === option.id;
+  return this.selectedActions[kpi.id] === option.id;
 }
 
 
@@ -129,7 +133,7 @@ isActionSelected(option: any, kpi: Kpi): boolean {
       // Map form fields → API payload
       const payload = {
         kpiName: formValues.kpiName,
-        kpiCode: formValues.kpiCode,
+        kpiCode: formValues.kpiCode || null,
         kpiDescription: formValues.kpiDescription,
         kpiCategory: formValues.kpiCategory || '',
         measurementUnit: formValues.measurementUnit,
@@ -150,14 +154,6 @@ isActionSelected(option: any, kpi: Kpi): boolean {
               }
               console.log('✅ KPI created successfully:', response);
               this.toaster.show('The kpi is successfully created', "success", 'KPI Created');
-              this.httpsCallApi.getStatistics().subscribe({
-      next: (res) => {
-        this.stats = res;
-      },
-      error: (err) => {
-        console.error('Error fetching statistics', err);
-      }
-    });
             },
             error: (err) => {
               console.error('❌ Error refreshing KPI list:', err);
@@ -198,7 +194,7 @@ isActionSelected(option: any, kpi: Kpi): boolean {
 
   this.kpiForm.patchValue({
     kpiName: kpi.kpiName,
-    kpiCode: kpi.kpiCode,
+    kpiCode: kpi.kpiCode || null,
     kpiDescription: kpi.kpiDescription,
     kpiCategory: kpi.kpiCategory || '',
     measurementUnit: kpi.measurementUnit,
@@ -240,7 +236,7 @@ updateKpi() {
 
     const payload = {
       kpiName: formValues.kpiName,
-      kpiCode: formValues.kpiCode,
+      kpiCode: formValues.kpiCode || null,
       kpiDescription: formValues.kpiDescription,
       kpiCategory: formValues.kpiCategory,
       measurementUnit: formValues.measurementUnit,
@@ -257,14 +253,6 @@ updateKpi() {
               this.dt.reset();
             }
             this.toaster.show('KPI updated successfully', 'success', 'KPI Updated');
-            this.httpsCallApi.getStatistics().subscribe({
-              next: (res) => {
-                this.stats = res;
-              },
-              error: (err) => {
-                console.error('Error fetching statistics', err);
-              }
-            });
           },
           error: (err) => {
             this.toaster.show('Failed to refresh KPI list', 'error', 'Error');

@@ -20,9 +20,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { RippleModule } from 'primeng/ripple';
-
-
-
+import { MultiSelectModule } from 'primeng/multiselect';
 
 
 @NgModule({
@@ -48,7 +46,9 @@ import { RippleModule } from 'primeng/ripple';
     InputTextModule,
     DropdownModule,
     RippleModule,
-     OverlayPanelModule,  
+    OverlayPanelModule,  
+    MultiSelectModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
