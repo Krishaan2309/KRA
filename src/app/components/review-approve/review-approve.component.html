@@ -1,0 +1,189 @@
+
+
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <h1>Review & Approve</h1>
+                <p>Enter actual performance values for Users</p>
+            </div>
+            <select class="month-selector">
+                <option>April 2025</option>
+                <option>March 2025</option>
+                <option>February 2025</option>
+            </select>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card blue">
+                <div class="stat-label">Direct Reports</div>
+                <div class="stat-value">12</div>
+            </div>
+            <div class="stat-card purple">
+                <div class="stat-label">Pending Reviews</div>
+                <div class="stat-value">8</div>
+            </div>
+            <div class="stat-card green">
+                <div class="stat-label">Approved</div>
+                <div class="stat-value">4</div>
+            </div>
+            <div class="stat-card yellow">
+                <div class="stat-label">Avg Performance</div>
+                <div class="stat-value">88%</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <h2>Direct Reports</h2>
+                <div class="tabs">
+                    <div class="tab active">All</div>
+                    <div class="tab">Pending</div>
+                </div>
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" placeholder="Search Team Members">
+                </div>
+                <div class="team-list">
+                    <div class="team-member active">
+                        <div class="avatar active-user">S</div>
+                        <div class="member-info">
+                            <div class="member-name">Sathish Shankar</div>
+                            <div class="member-id">ASP1001 - L4</div>
+                        </div>
+                        <div class="status-dot"></div>
+                    </div>
+                    <div class="team-member">
+                        <div class="avatar">J</div>
+                        <div class="member-info">
+                            <div class="member-name">Sujatha</div>
+                            <div class="member-id">ASP1001 - L4</div>
+                        </div>
+                    </div>
+                    <div class="team-member">
+                        <div class="avatar">E</div>
+                        <div class="member-info">
+                            <div class="member-name">Jayaprathap</div>
+                            <div class="member-id">ASP1001 - L4</div>
+                        </div>
+                    </div>
+                    <div class="team-member">
+                        <div class="avatar">D</div>
+                        <div class="member-info">
+                            <div class="member-name">Dianne Russell</div>
+                            <div class="member-id">ASP1001 - L4</div>
+                        </div>
+                    </div>
+                    <div class="team-member">
+                        <div class="avatar">K</div>
+                        <div class="member-info">
+                            <div class="member-name">Kristin Watson</div>
+                            <div class="member-id">ASP1001 - L4</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="review-panel">
+                <div class="employee-header">
+                    <div class="employee-avatar">S</div>
+                    <div class="employee-details">
+                        <div class="employee-name">Sathish Shankar</div>
+                        <div class="employee-meta">Role: Vice President-IT • Employee ID: EMP001 • Level - L6</div>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn-icon">✏️</button>
+                        <button class="btn btn-reject">Reject</button>
+                        <button class="btn btn-approve">Approve</button>
+                    </div>
+                </div>
+
+                <table class="kpi-table">
+                    <thead>
+                        <tr>
+                            <th>KPI Name</th>
+                            <th>Weight</th>
+                            <th>Target</th>
+                            <th>Actual</th>
+                            <th>Achieved%</th>
+                            <th>PUP Score</th>
+                            <th>Weightage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="kpi-name">Claims Processing Volume</div>
+                                <div class="kpi-formula">Claims/Day • HIGHER_IS_BETTER</div>
+                            </td>
+                            <td>20%</td>
+                            <td><input type="text" class="value-input" value="1000"></td>
+                            <td><input type="text" class="value-input" value="1000"></td>
+                            <td><span class="achievement high">100%</span></td>
+                            <td>4</td>
+                            <td>16%</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="kpi-name">Claims Denial Rate</div>
+                                <div class="kpi-formula">Percentage • LOWER_IS_BETTER</div>
+                            </td>
+                            <td>20%</td>
+                            <td><input type="text" class="value-input" value="8.0"></td>
+                            <td><input type="text" class="value-input" value="10.5"></td>
+                            <td><span class="achievement medium">76.2%</span></td>
+                            <td>3</td>
+                            <td>0%</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="kpi-name">Days in Accounts Receivable</div>
+                                <div class="kpi-formula">Days • LOWER_IS_BETTER</div>
+                            </td>
+                            <td>20%</td>
+                            <td><input type="text" class="value-input" value="45"></td>
+                            <td><input type="text" class="value-input" value="38"></td>
+                            <td><span class="achievement high">118.4%</span></td>
+                            <td>4</td>
+                            <td>16%</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="kpi-name">Collection Rate</div>
+                                <div class="kpi-formula">Percentage • HIGHER_IS_BETTER</div>
+                            </td>
+                            <td>15%</td>
+                            <td><input type="text" class="value-input" value="92.0"></td>
+                            <td><input type="text" class="value-input" value="88.0"></td>
+                            <td><span class="achievement high">95.7%</span></td>
+                            <td>4</td>
+                            <td>12%</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="kpi-name">Attendance Rate</div>
+                                <div class="kpi-formula">Percentage • HIGHER_IS_BETTER</div>
+                            </td>
+                            <td>10%</td>
+                            <td><input type="text" class="value-input" value="95.0"></td>
+                            <td><input type="text" class="value-input" value="120"></td>
+                            <td><span class="achievement high">126.3%</span></td>
+                            <td>5</td>
+                            <td>10%</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="kpi-name">Budget Utilization</div>
+                                <div class="kpi-formula">Percentage • EQUAL_TO_TARGET</div>
+                            </td>
+                            <td>10%</td>
+                            <td><input type="text" class="value-input" value="100.0"></td>
+                            <td><input type="text" class="value-input" value="100"></td>
+                            <td><span class="achievement high">100.0%</span></td>
+                            <td>4</td>
+                            <td>8%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>

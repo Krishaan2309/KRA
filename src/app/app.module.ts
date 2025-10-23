@@ -20,6 +20,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { RippleModule } from 'primeng/ripple';
+import { ReviewApproveComponent } from './components/review-approve/review-approve.component';
 
 
 
@@ -34,7 +35,8 @@ import { RippleModule } from 'primeng/ripple';
     KpiManagementComponent,
     KpiEntryComponent,
     PerformanceProfilesComponent,
-    ToasterComponent
+    ToasterComponent,
+    ReviewApproveComponent
   ],
   imports: [
     BrowserModule,

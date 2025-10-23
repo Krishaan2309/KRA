@@ -4,6 +4,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { KpiEntryComponent } from './components/kpi-entry/kpi-entry.component';
 import { KpiManagementComponent } from './components/kpi-management/kpi-management.component';
 import { PerformanceProfilesComponent } from './components/performance-profiles/performance-profiles.component';
+import { ReviewApproveComponent } from './components/review-approve/review-approve.component';
 
 const routes: Routes = [
   {path:'', redirectTo:'/dashboard', pathMatch:'full'},
@@ -11,6 +12,7 @@ const routes: Routes = [
   {path:'kpi-entry', component:KpiEntryComponent},
   {path:'kpi-management', component:KpiManagementComponent},
   {path:'performance-profiles', component:PerformanceProfilesComponent},
+  {path:'review-aprrove', component:ReviewApproveComponent},
   { path: '**', redirectTo: '/dashboard' }
 ];
 
