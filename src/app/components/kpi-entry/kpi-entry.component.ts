@@ -22,7 +22,7 @@ export class KpiEntryComponent {
   selectedEmployee?: ManagerEmployees;
   selfRate: boolean = false;
   evalutionYear: number = 2025
-  evalutionMonth : number = 12
+  evalutionMonth : number = 1
   summary!: EmployeeKpiSummary;
   lastApprovedReference!: LastApprovedReference;
 
@@ -45,9 +45,9 @@ export class KpiEntryComponent {
       this.selectedEmployee = this.employees[0];
       console.log('Selected employee:', this.selectedEmployee);
       employeeId = this.selectedEmployee.employeeId
-      this.kpiProfiles = await firstValueFrom(this.httpsCallApi.getEmployeeKpis(employeeId, 2025, 12));
-      this.summary = await firstValueFrom(this.httpsCallApi.getEmployeeCurrentSummary(employeeId, 2025, 12));
-      this.lastApprovedReference = await firstValueFrom(this.httpsCallApi.getLastApprovedReference(employeeId, 2025, 12));
+      this.kpiProfiles = await firstValueFrom(this.httpsCallApi.getEmployeeKpis(employeeId, 2025, 1));
+      this.summary = await firstValueFrom(this.httpsCallApi.getEmployeeCurrentSummary(employeeId, 2025, 1));
+      this.lastApprovedReference = await firstValueFrom(this.httpsCallApi.getLastApprovedReference(employeeId, 2025, 1));
 
     console.log('Employee KPIs loaded:', this.kpiProfiles);
     } catch (error) {
@@ -91,7 +91,7 @@ getSummary(employeeId: string, year:number, month:number){
   }
 
   loadEmployeeKpis(employeeId: string): void {
-    this.httpsCallApi.getEmployeeKpis(employeeId, 2025, 12).subscribe({
+    this.httpsCallApi.getEmployeeKpis(employeeId, 2025, 1).subscribe({
       next: (data) => {
         this.kpiProfiles = data;
         console.log('Employee KPIs:', data);
@@ -131,8 +131,8 @@ getSummary(employeeId: string, year:number, month:number){
     this.selectedEmployee = emp
     this.isOpen = false;
     this.loadEmployeeKpis(emp.employeeId);
-    this.getSummary(emp.employeeId, 2025,12);
-    this.getLastApprovedReference(emp.employeeId, 2025, 12)
+    this.getSummary(emp.employeeId, 2025,1);
+    this.getLastApprovedReference(emp.employeeId, 2025, 1)
   }
 
   @HostListener('document:click', ['$event'])
