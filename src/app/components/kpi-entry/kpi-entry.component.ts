@@ -21,6 +21,7 @@ export class KpiEntryComponent {
   kpiProfiles: KpiProfiles[] = [];
   selectedEmployee?: ManagerEmployees;
   selfRate: boolean = false;
+  searchTerm: string = '';
   evalutionYear: number = 2025
   evalutionMonth : number = 1
   summary!: EmployeeKpiSummary;
@@ -126,10 +127,12 @@ getSummary(employeeId: string, year:number, month:number){
     this.isOpen = !this.isOpen;
   }
 
-  selectEmployee(emp: any) {
+  selectEmployee(emp: ManagerEmployees) {
     console.log('Selected employee:', emp);
-    this.selectedEmployee = emp
+    this.selectedEmployee = emp;
     this.isOpen = false;
+    this.searchTerm = '';
+    // Trigger other data loads
     this.loadEmployeeKpis(emp.employeeId);
     this.getSummary(emp.employeeId, 2025,1);
     this.getLastApprovedReference(emp.employeeId, 2025, 1)

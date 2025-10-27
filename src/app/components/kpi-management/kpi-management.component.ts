@@ -32,6 +32,12 @@ export class KpiManagementComponent {
       { label: 'Days' , value: 'days'}
     ];
 
+    kpiCategories = [
+      { label: 'Operational', value: 'Operational' },
+      { label: 'Quality', value: 'Quality' },
+      { label: 'Finance', value: 'Finance' }
+    ];
+
   selectedCategory: string = '';
   selectedFormula: string = '';
 

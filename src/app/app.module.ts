@@ -14,6 +14,8 @@ import { HttpClientModule } from '@angular/common/http'; // 👈 Add this import
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { CalendarModule } from 'primeng/calendar';
+// import { DatePickerModule } from 'primeng/datepicker';
 // PrimeNG modules
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
@@ -22,7 +24,6 @@ import { DropdownModule } from 'primeng/dropdown';
 import { RippleModule } from 'primeng/ripple';
 import { ReviewApproveComponent } from './components/review-approve/review-approve.component';
 import { MultiSelectModule } from 'primeng/multiselect';
-
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
     ReviewApproveComponent
   ],
   imports: [
+    CalendarModule,
     BrowserModule,
     AppRoutingModule,
     FormsModule,

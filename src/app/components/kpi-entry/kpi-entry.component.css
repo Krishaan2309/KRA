@@ -286,6 +286,9 @@
   line-height: 1.125rem; /* 150% */
 }
 .dropdown-content {
+  width: 100%;
+  padding: 0.5rem;  
+  border: 1px solid var(--Gray-300, #D0D5DD);
   display: block;
   position: absolute;
   top: calc(100% + 5px);
@@ -298,16 +301,59 @@
   z-index: 1000;
 }
 
+.search-box{
+  width: 100%;
+  border-radius: 0.5rem;
+  padding: 0.625rem 0.875rem;
+  border: 1px solid var(--Gray-300, #D0D5DD);
+  background: var(--White, #FFF);
+  box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+}
+
+.letter-icon{
+  border-radius: 1.09375rem;
+  background: #EAEAEA;
+  width: 2rem;
+  height: 2rem;
+  padding: 0.46275rem 0.75719rem;
+}
+
+.employee-detail{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.employee-detail-container{
+  padding: 0.5rem;
+}
+
+.employee-values p:first-of-type{
+  color: #000;
+  font-family: Inter;
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.5rem;
+}
+
+.employee-values p:last-of-type{
+  color: var(--Gray-500, #667085);
+  font-family: Inter;
+  font-size: 0.75rem;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 1rem;
+}
+
 .dropdown-content div {
-  padding: 0.5rem 1rem;
+  /* padding: 0.5rem 1rem; */
   cursor: pointer;
   color: #333;
   font-size: 0.875rem;
 }
 
-.dropdown-content div:hover {
-  background: #f3f4f6;
-}
 
 svg.rotate {
   transform: rotate(180deg);

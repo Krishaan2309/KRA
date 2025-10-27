@@ -203,6 +203,10 @@
   line-height: 1.25rem;
 }
 
+::ng-deep .p-dropdown{
+  width: 100%;
+}
+
 ::ng-deep .p-element.p-dropdown-label {
   padding: 8px;
   color: var(--Gray-700, #344054);
@@ -521,6 +525,7 @@ tr {
   display: flex;
   flex-direction: column;
   margin-bottom: 16px;
+  position: relative;
 }
 
 .form-row label {
@@ -595,6 +600,8 @@ textarea {
 }
 
 .error {
+  position: absolute;
+  bottom: -25%;
   color: #C00000;
   font-size: 12px;
   margin-top: 4px;
