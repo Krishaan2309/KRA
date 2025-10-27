@@ -230,12 +230,16 @@
 
         <div class="form-row">
           <label>Category<span class="required">*</span></label>
-          <select formControlName="kpiCategory">
-            <option value="">Select Category</option>
-            <option>Operational</option>
-            <option>Quality</option>
-            <option>Finance</option>
-          </select>
+          <p-dropdown
+            [options]="kpiCategories"
+            formControlName="kpiCategory"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Select Category"
+            [filter]="true"
+            filterBy="label"
+            class="w-full md:w-80">
+          </p-dropdown>
           <small class="error" *ngIf="isInvalid('kpiCategory')">
             Category is required.
           </small>
@@ -258,12 +262,16 @@
       <div class="form-grid">
         <div class="form-row">
           <label>Formula Type<span class="required">*</span></label>
-          <select formControlName="formulaCode">
-            <option value="" class="default-select">Select Formula</option>
-            <option *ngFor="let option of formulaOptions" [value]="option.value">
-              {{ option.label }}
-            </option>
-          </select>
+          <p-dropdown
+            [options]="formulaOptions"
+            formControlName="formulaCode"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Select Formula"
+            [filter]="true"
+            filterBy="label"
+            class="w-full md:w-80">
+          </p-dropdown>
           <small class="error" *ngIf="isInvalid('formulaCode')">
             Formula Type is required.
           </small>
@@ -271,12 +279,16 @@
 
         <div class="form-row">
           <label>Measurement Unit<span class="required">*</span></label>
-          <select formControlName="measurementUnit">
-            <option value="" class="default-select">Select Unit</option>
-            <option *ngFor="let option of measurementUnitOptions" [value]="option.value">
-              {{ option.label }}
-            </option>
-          </select>
+          <p-dropdown
+            [options]="measurementUnitOptions"
+            formControlName="measurementUnit"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Select Unit"
+            [filter]="true"
+            filterBy="label"
+            class="w-full md:w-80">
+          </p-dropdown>
           <small class="error" *ngIf="isInvalid('measurementUnit')">
             Measurement Unit is required.
           </small>

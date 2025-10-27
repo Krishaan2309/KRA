@@ -6,11 +6,14 @@
                 <h1>Review & Approve</h1>
                 <p>Enter actual performance values for Users</p>
             </div>
-            <select class="month-selector">
-                <option>April 2025</option>
-                <option>March 2025</option>
-                <option>February 2025</option>
-            </select>
+            <div class="card flex justify-center">
+                <p-calendar
+                    [(ngModel)]="date"
+                    view="month"
+                    [dateFormat]="'MM yy'"
+                    [readonlyInput]="true" yearRange="2000:2035" placeholder="Select Month">
+                </p-calendar>
+            </div>
         </div>
 
         <div class="stats-grid">
@@ -26,7 +29,7 @@
                 <div class="stat-label">Approved</div>
                 <div class="stat-value">4</div>
             </div>
-            <div class="stat-card yellow">
+            <div class="stat-card orange">
                 <div class="stat-label">Avg Performance</div>
                 <div class="stat-value">88%</div>
             </div>
@@ -40,17 +43,17 @@
                     <div class="tab">Pending</div>
                 </div>
                 <div class="search-box">
-                    <span class="search-icon">🔍</span>
+                    <span class="search-icon"><img src="assets/search.svg"></span>
                     <input type="text" placeholder="Search Team Members">
                 </div>
                 <div class="team-list">
-                    <div class="team-member active">
+                    <div class="team-member ">
                         <div class="avatar active-user">S</div>
                         <div class="member-info">
                             <div class="member-name">Sathish Shankar</div>
                             <div class="member-id">ASP1001 - L4</div>
                         </div>
-                        <div class="status-dot"></div>
+                        <div><img src="assets/Group-circle.svg"></div>
                     </div>
                     <div class="team-member">
                         <div class="avatar">J</div>
@@ -88,10 +91,12 @@
                     <div class="employee-avatar">S</div>
                     <div class="employee-details">
                         <div class="employee-name">Sathish Shankar</div>
-                        <div class="employee-meta">Role: Vice President-IT • Employee ID: EMP001 • Level - L6</div>
+                        <div class="employee-meta">Role: <span class="bold">Vice President-IT</span> • Employee ID: <span class="bold">EMP001</span> • Level - L6</div>
                     </div>
                     <div class="action-buttons">
-                        <button class="btn-icon">✏️</button>
+                        <button class="btn-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="16" viewBox="0 0 18 16" fill="none">
+                        <path d="M9 15.1335H16.5M12.75 1.38349C13.0815 1.05197 13.5312 0.865723 14 0.865723C14.2321 0.865723 14.462 0.911447 14.6765 1.00029C14.891 1.08912 15.0858 1.21934 15.25 1.38349C15.4142 1.54764 15.5444 1.74252 15.6332 1.95699C15.722 2.17147 15.7678 2.40134 15.7678 2.63349C15.7678 2.86564 15.722 3.09551 15.6332 3.30998C15.5444 3.52446 15.4142 3.71934 15.25 3.88349L4.83333 14.3002L1.5 15.1335L2.33333 11.8002L12.75 1.38349Z" stroke="#344054" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg></button>
                         <button class="btn btn-reject">Reject</button>
                         <button class="btn btn-approve">Approve</button>
                     </div>
@@ -118,7 +123,7 @@
                             <td>20%</td>
                             <td><input type="text" class="value-input" value="1000"></td>
                             <td><input type="text" class="value-input" value="1000"></td>
-                            <td><span class="achievement high">100%</span></td>
+                            <td><span class="achievement">100%</span></td>
                             <td>4</td>
                             <td>16%</td>
                         </tr>
@@ -130,7 +135,7 @@
                             <td>20%</td>
                             <td><input type="text" class="value-input" value="8.0"></td>
                             <td><input type="text" class="value-input" value="10.5"></td>
-                            <td><span class="achievement medium">76.2%</span></td>
+                            <td><span class="achievement">76.2%</span></td>
                             <td>3</td>
                             <td>0%</td>
                         </tr>
@@ -142,7 +147,7 @@
                             <td>20%</td>
                             <td><input type="text" class="value-input" value="45"></td>
                             <td><input type="text" class="value-input" value="38"></td>
-                            <td><span class="achievement high">118.4%</span></td>
+                            <td><span class="achievement">118.4%</span></td>
                             <td>4</td>
                             <td>16%</td>
                         </tr>
@@ -154,7 +159,7 @@
                             <td>15%</td>
                             <td><input type="text" class="value-input" value="92.0"></td>
                             <td><input type="text" class="value-input" value="88.0"></td>
-                            <td><span class="achievement high">95.7%</span></td>
+                            <td><span class="achievement">95.7%</span></td>
                             <td>4</td>
                             <td>12%</td>
                         </tr>
@@ -166,7 +171,7 @@
                             <td>10%</td>
                             <td><input type="text" class="value-input" value="95.0"></td>
                             <td><input type="text" class="value-input" value="120"></td>
-                            <td><span class="achievement high">126.3%</span></td>
+                            <td><span class="achievement">126.3%</span></td>
                             <td>5</td>
                             <td>10%</td>
                         </tr>
@@ -178,7 +183,7 @@
                             <td>10%</td>
                             <td><input type="text" class="value-input" value="100.0"></td>
                             <td><input type="text" class="value-input" value="100"></td>
-                            <td><span class="achievement high">100.0%</span></td>
+                            <td><span class="achievement">100.0%</span></td>
                             <td>4</td>
                             <td>8%</td>
                         </tr>

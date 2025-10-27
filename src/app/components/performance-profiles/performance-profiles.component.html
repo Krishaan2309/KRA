@@ -224,16 +224,16 @@
         <div class="form-row">
           <div class="form-group">
             <label>Department <span class="required">*</span></label>
-            <p-multiSelect
+            <p-dropdown
               [options]="departments"
               formControlName="departmentId"
               optionLabel="departmentName"
               optionValue="id"
               placeholder="Select Department"
-              display="chip"
-              [maxSelectedLabels]="1"
+              [filter]="true"
+              filterBy="label"
               class="w-full md:w-80">
-            </p-multiSelect>
+            </p-dropdown>
             <small class="error" *ngIf="isInvalid('departmentId')">
               Department is required.
             </small>
@@ -241,16 +241,16 @@
 
           <div class="form-group">
             <label>Level <span class="required">*</span></label>
-            <p-multiSelect
+            <p-dropdown
               [options]="levels"
               formControlName="gradeId"
               optionLabel="gradeName"
               optionValue="id"
               placeholder="Select Level"
-              display="chip"
-              [maxSelectedLabels]="1"
+              [filter]="true"
+              filterBy="label"
               class="w-full md:w-80">
-            </p-multiSelect>
+            </p-dropdown>
             <small class="error" *ngIf="isInvalid('gradeId')">
               Level is required.
             </small>
@@ -269,107 +269,106 @@
             </small>
           </div>
         </div>
-
+                                        
         <!-- KPI Assignments -->
         <div class="kpi-section">
-          <div>
-            <h3>Add KPI to Profile</h3>
-            <div class="self-rating">
-              <label class="toggle">
-                <input type="checkbox" formControlName="selfRatingEnabled" />
-                <span class="slider"></span>
-              </label>
-              <span class="label-text">Enable Self Rating</span>
+       
+              <h3>Add KPI to Profile</h3>
+              <div class="self-rating">
+                <label class="toggle">
+                  <input type="checkbox" formControlName="selfRatingEnabled" />
+                  <span class="slider"></span>
+                </label>
+                <span class="label-text">Enable Self Rating</span>
+              </div>
             </div>
-          </div>
 
-          <div [formGroup]="newKpiForm" class="kpi-form-row">
-            <div class="kpi-form-firdiv">
-              <!-- <label>KPI</label>
-              <select formControlName="kpiId" class="form-control">
-                <option value="">Select KPI</option>
-                <option *ngFor="let k of kpiMasterList" [value]="k.id">
-                  {{ k.kpiName }}
-                </option>
-              </select> -->
-              <label>KPI <span class="required">*</span></label>
-                <p-multiSelect
+            <div [formGroup]="newKpiForm" class="kpi-form-row">
+              <div class="kpi-form-firdiv">
+                <!-- <label>KPI</label>
+                <select formControlName="kpiId" class="form-control">
+                  <option value="">Select KPI</option>
+                  <option *ngFor="let k of kpiMasterList" [value]="k.id">
+                    {{ k.kpiName }}
+                  </option>
+                </select> -->
+                <label>KPI <span class="required">*</span></label>
+                <p-dropdown
                   [options]="kpiMasterList"
                   formControlName="kpiId"
                   optionLabel="kpiName"
                   optionValue="id"
                   placeholder="Select KPI"
-                  display="chip"
-                  [maxSelectedLabels]="1"
+                  [filter]="true"
+                  filterBy="label"
                   class="w-full md:w-80">
-                </p-multiSelect>
-            </div>
-            <div class="kpi-form-secdiv">
-              <div>
-                <label>Min Score Range</label>
-                <input type="number" formControlName="kpiMinRange" placeholder="Min" />
+                </p-dropdown>
               </div>
-              <div>
-                <label>Max Score Range</label>
-                <input type="number" formControlName="kpiMaxRange" placeholder="Max" />
-              </div>
-              <div>
-                <label>Qualification Criteria</label>
-                <input type="number" formControlName="kpiQualifyCriteria" placeholder="Qualify" />
-              </div>
-              <div>
-                <label>Weightage</label>
-                <input type="number" formControlName="weightage" placeholder="%" />
-              </div>
-            </div>
-            <div class="kpi-form-thidiv">
-              <button type="button" (click)="addKpiAssignment()">
-                <img src="assets/plus.svg" alt="Add" />
-              </button>
-            </div>
-          </div>
-
-          <!-- KPI Preview Section -->
-          <div class="kpi-preview" *ngIf="kpiAssignments.length > 0; else noPreview">
-            <div *ngFor="let kpi of kpiAssignments.value; let idx = index" class="preview-row">
-              <div *ngIf="kpi.kpiId" class="preview-align">
-                <div class="preview-info">
-                  <strong>{{ getKpiNameById(kpi.kpiId) }}</strong>
-                  <p>
-                    Min Score: {{ kpi.kpiMinRange }}<span class="dot"></span>
-                    Max Score: {{ kpi.kpiMaxRange }}<span class="dot"></span>
-                    Qualification Criteria: {{ kpi.kpiQualifyCriteria }}
-                  </p>
+              <div class="kpi-form-secdiv">
+                <div>
+                  <label>Min Score Range</label>
+                  <input type="number" formControlName="kpiMinRange" placeholder="Min" />
                 </div>
-                <div class="preview-weight">
-                  <span>
-                    <p>{{ kpi.weightage }}%</p>
-                  </span>
-                  <span>
-                    <button type="button" class="clear-btn" (click)="removeKpiAssignment(idx)">
-                      <img src="assets/trash.svg" alt="Delete" />
-                    </button>
-                  </span>
+                <div>
+                  <label>Max Score Range</label>
+                  <input type="number" formControlName="kpiMaxRange" placeholder="Max" />
+                </div>
+                <div>
+                  <label>Qualification Criteria</label>
+                  <input type="number" formControlName="kpiQualifyCriteria" placeholder="Qualify" />
+                </div>
+                <div>
+                  <label>Weightage</label>
+                  <input type="number" formControlName="weightage" placeholder="%" />
                 </div>
               </div>
+              <div class="kpi-form-thidiv">
+                <button type="button" (click)="addKpiAssignment()">
+                  <img src="assets/plus.svg" alt="Add" />
+                </button>
+              </div>
             </div>
-          </div>
 
-          <!-- No Preview Template -->
-          <ng-template #noPreview>
-            <div class="kpi-preview modal-search-icon">
-              <div class="search-icon">
-                <img src="assets/search-cicon.png" alt="No KPI" />
-              </div>
-              <div class="no-profile-container modal-search">
-                <span>No KPIs Added</span>
-                <span>Add KPIs to this profile to view them here.</span>
+            <!-- KPI Preview Section -->
+            <div class="kpi-preview" *ngIf="kpiAssignments.length > 0; else noPreview">
+              <div *ngFor="let kpi of kpiAssignments.value; let idx = index" class="preview-row">
+                <div *ngIf="kpi.kpiId" class="preview-align">
+                  <div class="preview-info">
+                    <strong>{{ getKpiNameById(kpi.kpiId) }}</strong>
+                    <p>
+                      Min Score: {{ kpi.kpiMinRange }}<span class="dot"></span>
+                      Max Score: {{ kpi.kpiMaxRange }}<span class="dot"></span>
+                      Qualification Criteria: {{ kpi.kpiQualifyCriteria }}
+                    </p>
+                  </div>
+                  <div class="preview-weight">
+                    <span>
+                      <p>{{ kpi.weightage }}%</p>
+                    </span>
+                    <span>
+                      <button type="button" class="clear-btn" (click)="removeKpiAssignment(idx)">
+                        <img src="assets/trash.svg" alt="Delete" />
+                      </button>
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
-          </ng-template>
-        </div>
+
+            <!-- No Preview Template -->
+            <ng-template #noPreview>
+              <div class="kpi-preview modal-search-icon">
+                <div class="search-icon">
+                  <img src="assets/search-cicon.png" alt="No KPI" />
+                </div>
+                <div class="no-profile-container modal-search">
+                  <span>No KPIs Added</span>
+                  <span>Add KPIs to this profile to view them here.</span>
+                </div>
+              </div>
+            </ng-template>
       </div>
-
+      
       <!-- Footer -->
       <div class="modal-footer">
         <button type="button" class="btn btn-cancel" (click)="closeModal()">Cancel</button>

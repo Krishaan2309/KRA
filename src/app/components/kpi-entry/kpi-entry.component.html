@@ -49,8 +49,22 @@
         </svg>
       </div>
       <div class="dropdown-content" *ngIf="isOpen && !selfRate">
-        <div *ngFor="let emp of employees" (click)="selectEmployee(emp)">
-          {{ emp.employeeName }} - {{ emp.employeeCode }}
+        <div>
+          <input class="search-box" placeholder="Search" (click)="$event.stopPropagation()" [(ngModel)]="searchTerm"> 
+        </div>
+        <div *ngFor="let emp of filteredEmployees()" (click)="selectEmployee(emp)" class="employee-detail-container">
+          <div class="employee-detail">
+            <span class="letter-icon">
+              {{ emp.employeeName.charAt(0).toUpperCase()}}
+            </span>
+            <span class="employee-values">
+              <p>{{ emp.employeeName}}</p>
+              <p>{{emp.employeeCode}}</p>
+            </span>
+          </div>
+          <div>
+            <p></p>
+          </div>
         </div>
       </div>
   </div>

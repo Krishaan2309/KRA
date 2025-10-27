@@ -21,8 +21,9 @@ export class KpiEntryComponent {
   kpiProfiles: KpiProfiles[] = [];
   selectedEmployee?: ManagerEmployees;
   selfRate: boolean = false;
+  searchTerm: string = '';
   evalutionYear: number = 2025
-  evalutionMonth : number = 12
+  evalutionMonth : number = 10
   summary!: EmployeeKpiSummary;
   lastApprovedReference!: LastApprovedReference;
 
@@ -126,13 +127,24 @@ getSummary(employeeId: string, year:number, month:number){
     this.isOpen = !this.isOpen;
   }
 
-  selectEmployee(emp: any) {
+  selectEmployee(emp: ManagerEmployees) {
     console.log('Selected employee:', emp);
-    this.selectedEmployee = emp
+    this.selectedEmployee = emp;
     this.isOpen = false;
+    this.searchTerm = '';
+    // Trigger other data loads
     this.loadEmployeeKpis(emp.employeeId);
-    this.getSummary(emp.employeeId, 2025,12);
-    this.getLastApprovedReference(emp.employeeId, 2025, 12)
+    this.getSummary(emp.employeeId, 2025, 12);
+    this.getLastApprovedReference(emp.employeeId, 2025, 12);
+  }
+
+  filteredEmployees(): ManagerEmployees[] {
+    if (!this.searchTerm) return this.employees;
+    const term = this.searchTerm.toLowerCase();
+    return this.employees.filter(emp =>
+      emp.employeeName.toLowerCase().includes(term) ||
+      emp.employeeCode.toLowerCase().includes(term)
+    );
   }
 
   @HostListener('document:click', ['$event'])
