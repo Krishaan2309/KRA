@@ -204,17 +204,6 @@
 
       <!-- KPI Code + Category -->
       <div class="form-grid">
-        <!-- <div class="form-row">
-          <label>KPI Code<span class="required">*</span></label>
-          <input
-            type="text"
-            placeholder="eg: CDR_001"
-            formControlName="kpiCode"
-          />
-          <small class="error" *ngIf="isInvalid('kpiCode')">
-            KPI Code is required.
-          </small>
-        </div> -->
 
       <div class="form-row">
         <label>KPI Name<span class="required">*</span></label>
@@ -222,6 +211,7 @@
           type="text"
           placeholder="eg: Production ..."
           formControlName="kpiName"
+          class="form-control"
         />
         <small class="error" *ngIf="isInvalid('kpiName')">
           KPI Name is required.
