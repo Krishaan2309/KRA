@@ -22,7 +22,6 @@ export class PerformanceProfilesComponent {
   kpiMasterList: Kpi[] = [];
   departments: Department[] = [];
   levels: Grade[] = [];
-  
   createProfileForm!: FormGroup;
   newKpiForm!: FormGroup;
   
@@ -31,7 +30,7 @@ export class PerformanceProfilesComponent {
   showCreateProfile = false;
   tempProfileId: string = '';
   
-  rows = 10;
+  rows = 5;
   selectedStatus = '';
   totalWeightage: number[] = [];
   hundredCheck = 0;
@@ -42,6 +41,13 @@ export class PerformanceProfilesComponent {
     { label: 'View Details' },
   ];
   
+
+  rowsOptions = [
+    { label: '5', value: 5 },
+    { label: '10', value: 10 },
+    { label: '15', value: 15 }
+  ];
+
   previewShow = false;
   showActionButton = true;
   

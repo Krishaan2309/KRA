@@ -4,133 +4,116 @@
   padding: 0;
   box-sizing: border-box;
 }
-
 .navbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   background-color: #0a3253;
-  padding: 10px 20px;
+  padding: 8px 16px;
   position: relative;
 }
-
 /* Logo */
 .logo {
   display: flex;
   align-items: center;
   color: white;
   font-weight: bold;
-  font-size: 16px;
+  font-size: 14px;
 }
-
 .logo img {
-  height: 40px;
-  margin-right: 10px;
+  height: 34px;
+  margin-right: 8px;
 }
-
 /* Menu */
 .menu {
   display: flex;
-  gap: 25px;
+  gap: 20px;
   align-items: center;
 }
-
 .menu a {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   color: #d3e2ef;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 13px;
   transition: color 0.3s;
 }
-
 .menu a.active {
   background-color: #1f4f73;
-  padding: 8px 16px;
-  border-radius: 25px;
+  padding: 6px 12px;
+  border-radius: 20px;
   color: white;
 }
-
 .menu a:hover {
   color: white;
 }
-
 /* User */
 .user {
-  width: 35px;
-  height: 35px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   background-color: #a5b2bd;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: bold;
+  font-size: 13px;
   color: black;
 }
-
 /* Hamburger */
 .hamburger {
   display: none;
   flex-direction: column;
   cursor: pointer;
-  gap: 5px;
+  gap: 4px;
 }
-
 .hamburger div {
-  width: 25px;
-  height: 3px;
+  width: 22px;
+  height: 2.5px;
   background: white;
-  border-radius: 5px;
+  border-radius: 4px;
 }
-
 /* Mobile menu */
 .mobile-menu {
   display: none;
   flex-direction: column;
   background-color: #0a3253;
   position: absolute;
-  top: 60px;
+  top: 50px;
   left: 0;
   width: 100%;
-  padding: 15px 0;
+  padding: 12px 0;
   z-index: 1000;
 }
-
 .mobile-menu a {
-  padding: 12px 20px;
+  padding: 10px 16px;
   text-decoration: none;
   color: #d3e2ef;
-  font-size: 14px;
+  font-size: 13px;
 }
-
 .mobile-menu a:hover {
   background: #1f4f73;
   color: white;
 }
-
 .mobile-menu.show {
   display: flex;
 }
-
 /* Close button */
 .close-btn {
   align-self: flex-end;
   background: transparent;
   border: none;
   color: white;
-  font-size: 20px;
-  padding: 10px 20px;
+  font-size: 18px;
+  padding: 8px 16px;
   cursor: pointer;
 }
-
-
 /* Responsive */
 @media (max-width: 900px) {
   .menu {
     display: none;
   }
-
   .hamburger {
     display: flex;
   }

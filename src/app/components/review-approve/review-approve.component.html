@@ -7,12 +7,13 @@
                 <p>Enter actual performance values for Users</p>
             </div>
             <div class="card flex justify-center">
-                <p-calendar
-                    [(ngModel)]="date"
-                    view="month"
-                    [dateFormat]="'MM yy'"
-                    [readonlyInput]="true" yearRange="2000:2035" placeholder="Select Month">
-                </p-calendar>
+                    <p-calendar
+                        [(ngModel)]="date"
+                        view="month"
+                        [dateFormat]="'MM yy'"
+                        [readonlyInput]="true" yearRange="2000:2035" placeholder="Select Month"
+                        [showIcon]="true" icon="pi pi-chevron-down">
+                    </p-calendar>                       
             </div>
         </div>
 

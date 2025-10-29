@@ -29,15 +29,25 @@
             />
           </span>
           
-        </div>
+           <div class="rows-selector">
+              <p-dropdown
+                id="rows"
+                [options]="rowsOptions"
+                [(ngModel)]="rows"
+                (onChange)="dt.reset()"
+                optionLabel="label"
+                optionValue="value"
+              ></p-dropdown>
+            </div>
 
+        </div>
+ 
         <!-- Table -->
         <p-table
           #dt
           [value]="performanceProfiles"
           [paginator]="true"
           [rows]="rows"
-          [rowsPerPageOptions]="[5, 10, 15]"
           [showCurrentPageReport]="true"
           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} profiles"
           [globalFilterFields]="['profileName','profileDescription','baseVariablePay']"
@@ -273,7 +283,9 @@
         <!-- KPI Assignments -->
         <div class="kpi-section">
        
-              <h3>Add KPI to Profile</h3>
+              <div class="self-rating-container">
+                <h3>Add KPI to Profile</h3>
+              </div>
               <div class="self-rating">
                 <label class="toggle">
                   <input type="checkbox" formControlName="selfRatingEnabled" />
@@ -368,7 +380,7 @@
               </div>
             </ng-template>
       </div>
-      
+
       <!-- Footer -->
       <div class="modal-footer">
         <button type="button" class="btn btn-cancel" (click)="closeModal()">Cancel</button>

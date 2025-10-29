@@ -18,6 +18,7 @@ export class KpiEntryComponent {
   isOpen = false;
   toggleState = false;
   employees: ManagerEmployees[] = [];
+  filteredEmployees: ManagerEmployees[] = [];
   kpiProfiles: KpiProfiles[] = [];
   selectedEmployee?: ManagerEmployees;
   selfRate: boolean = false;
@@ -136,6 +137,15 @@ getSummary(employeeId: string, year:number, month:number){
     this.loadEmployeeKpis(emp.employeeId);
     this.getSummary(emp.employeeId, 2025,1);
     this.getLastApprovedReference(emp.employeeId, 2025, 1)
+  }
+
+  filterEmployees(){
+    const term = this.searchTerm.toLowerCase();
+    
+    return this.filteredEmployees = this.employees.filter( emp =>
+      emp.employeeName.toLowerCase().includes(term) ||
+      emp.employeeCode.toLowerCase().includes(term)
+    );
   }
 
   @HostListener('document:click', ['$event'])
