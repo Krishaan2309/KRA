@@ -10,7 +10,7 @@ import { KpiManagementComponent } from './components/kpi-management/kpi-manageme
 import { KpiEntryComponent } from './components/kpi-entry/kpi-entry.component';
 import { PerformanceProfilesComponent } from './components/performance-profiles/performance-profiles.component';
 import { ToasterComponent } from './components/toaster/toaster.component';
-import { HttpClientModule } from '@angular/common/http'; // 👈 Add this import
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http'; // 👈 Add this import
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
@@ -24,6 +24,9 @@ import { DropdownModule } from 'primeng/dropdown';
 import { RippleModule } from 'primeng/ripple';
 import { ReviewApproveComponent } from './components/review-approve/review-approve.component';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { LoginComponent } from './components/login/login.component';
+import { LoaderComponent } from './components/loader/loader.component';
+import { LoaderInterceptor } from './interceptors/loader.interceptor';
 
 @NgModule({
   declarations: [
@@ -35,7 +38,9 @@ import { MultiSelectModule } from 'primeng/multiselect';
     KpiEntryComponent,
     PerformanceProfilesComponent,
     ToasterComponent,
-    ReviewApproveComponent
+    ReviewApproveComponent,
+    LoginComponent,
+    LoaderComponent
   ],
   imports: [
     CalendarModule,
@@ -54,7 +59,9 @@ import { MultiSelectModule } from 'primeng/multiselect';
     MultiSelectModule,
     ReactiveFormsModule
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

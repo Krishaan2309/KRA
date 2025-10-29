@@ -52,7 +52,7 @@
         <div>
           <input class="search-box" placeholder="Search" (click)="$event.stopPropagation()" [(ngModel)]="searchTerm"> 
         </div>
-        <div *ngFor="let emp of filteredEmployees()" (click)="selectEmployee(emp)" class="employee-detail-container">
+        <div *ngFor="let emp of employees" (click)="selectEmployee(emp)" class="employee-detail-container">
           <div class="employee-detail">
             <span class="letter-icon">
               {{ emp.employeeName.charAt(0).toUpperCase()}}
