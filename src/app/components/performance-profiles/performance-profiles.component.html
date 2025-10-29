@@ -29,15 +29,25 @@
             />
           </span>
           
-        </div>
+           <div class="rows-selector">
+              <p-dropdown
+                id="rows"
+                [options]="rowsOptions"
+                [(ngModel)]="rows"
+                (onChange)="dt.reset()"
+                optionLabel="label"
+                optionValue="value"
+              ></p-dropdown>
+            </div>
 
+        </div>
+ 
         <!-- Table -->
         <p-table
           #dt
           [value]="performanceProfiles"
           [paginator]="true"
           [rows]="rows"
-          [rowsPerPageOptions]="[5, 10, 15]"
           [showCurrentPageReport]="true"
           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} profiles"
           [globalFilterFields]="['profileName','profileDescription','baseVariablePay']"
