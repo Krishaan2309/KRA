@@ -12,7 +12,7 @@
                         view="month"
                         [dateFormat]="'MM yy'"
                         [readonlyInput]="true" yearRange="2000:2035" placeholder="Select Month"
-                        [showIcon]="true" icon="pi pi-chevron-down">
+                        [showIcon]="true" icon="pi pi-calendar">
                     </p-calendar>                       
             </div>
         </div>
@@ -93,7 +93,7 @@
                                 <div class="kpi-name">{{kpi?.kpiName}}</div>
                                 <div class="kpi-formula">{{kpi?.measurementUnit}} • {{kpi?.formulaCode}}</div>
                             </td>
-                            <td>{{kpi?.weightage}}</td>
+                            <td>{{kpi?.weightage}}%</td>
                             <td><input type="text" class="value-input" [value]="kpi?.targetValue"></td>
                             <td><input type="text" class="value-input" [value]="kpi?.actualValue"></td>
                             <td><span class="achievement">{{kpi?.achievedPercentage}}</span></td>

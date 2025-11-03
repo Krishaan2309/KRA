@@ -149,11 +149,11 @@
             <div class="profile-info">
               <p>
                 <span>Description</span>
-                {{ selectedProfile.profileDescription || 'No description available' }}
+                <span class="tooltip-cell" tooltipPosition="top" [pTooltip]="selectedProfile.profileDescription">{{ selectedProfile.profileDescription || 'No description available' }}</span>
               </p>
               <p>
                 <span>Levels</span>
-                {{ selectedProfile.departmentGradeMappings?.[0]?.gradeName || 'N/A' }}
+                <span class="tooltip-cell" tooltipPosition="top" [pTooltip]="selectedProfile.departmentGradeMappings?.[0]?.gradeName">{{ selectedProfile.departmentGradeMappings?.[0]?.gradeName || 'N/A' }}</span>
               </p>
               <p>
                 <span>Variable Pay</span>
@@ -209,7 +209,7 @@
             <input
               type="text"
               formControlName="profileName"
-              placeholder="Production..."
+              placeholder="Medical Coding - Quality Analysts"
               class="form-control"
             />
             <small class="error" *ngIf="isInvalid('profileName')">
@@ -221,7 +221,7 @@
             <input
               type="text"
               formControlName="profileDescription"
-              placeholder="Percentage of claims..."
+              placeholder="Productivity metrics for Medical Coding"
               class="form-control"
             />
             <small class="error" *ngIf="isInvalid('profileDescription')">
@@ -287,11 +287,11 @@
                 <h3>Add KPI to Profile</h3>
               </div>
               <div class="self-rating">
-                <label class="toggle">
+                <!-- <label class="toggle">
                   <input type="checkbox" formControlName="selfRatingEnabled" />
                   <span class="slider"></span>
                 </label>
-                <span class="label-text">Enable Self Rating</span>
+                <span class="label-text">Enable Self Rating</span> -->
               </div>
             </div>
 
@@ -379,6 +379,14 @@
                 </div>
               </div>
             </ng-template>
+            <div class="weightage-container">
+              <div class="weightage-text">Total Weightage</div>
+              <div [ngClass]="{
+              'green-text': hundredCheck == 100,
+              'red-text': hundredCheck < 100 && hundredCheck != 0,
+              'weightage-num': hundredCheck == 0
+                    }">{{hundredCheck}}%</div>
+            </div>
       </div>
 
       <!-- Footer -->

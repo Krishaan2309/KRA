@@ -28,6 +28,11 @@ export class KpiEntryComponent {
   summary!: EmployeeKpiSummary;
   lastApprovedReference!: LastApprovedReference;
 
+  monthNames = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
   @ViewChild('userBox') userBox!: ElementRef;
   @ViewChildren('targetInput') targetInputs!: QueryList<ElementRef>;
   @ViewChildren('actualInput') actualInputs!: QueryList<ElementRef>;
@@ -38,7 +43,7 @@ export class KpiEntryComponent {
   ){}
 
   async ngOnInit(): Promise<void> {
-    const managerId = '55555555-5555-5555-5555-555555555555';
+    const managerId = '44444444-4444-4444-4444-444444444444';
     let employeeId = '11111111-1111-1111-1111-111111111111';
 
     try {
@@ -192,14 +197,14 @@ getSummary(employeeId: string, year:number, month:number){
   enteredBy: string;
   kpiData: KpiSubmission[];
   operationType: number;
-} = {
-  employeeId: employeeId,
-  evaluationYear: evaluationYear,
-  evaluationMonth: evaluationMonth,
-  enteredBy: managerId,
-  kpiData: [],
-  operationType: operationType
-};
+  } = {
+    employeeId: employeeId,
+    evaluationYear: evaluationYear,
+    evaluationMonth: evaluationMonth,
+    enteredBy: managerId,
+    kpiData: [],
+    operationType: operationType
+  };
 
     this.kpiProfiles.forEach((kpi, index) => {
       const target = Number(this.targetInputs.toArray()[index].nativeElement.value);

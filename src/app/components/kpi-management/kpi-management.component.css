@@ -313,6 +313,9 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+
+
 ::ng-deep .p-dropdown.p-disabled .p-dropdown-label {
   color: #94a3b8;
 }
@@ -388,9 +391,7 @@
   overflow-y: auto;
   overflow-x: auto;
 }
-::ng-deep .p-datatable > .p-datatable-wrapper::-webkit-scrollbar {
-  /* display: none; */
-}
+
 ::ng-deep .p-datatable .p-datatable-thead > tr > th {
   background-color: #f9fafb;
   padding: 0.6rem 0.8rem;
@@ -430,6 +431,16 @@
 ::ng-deep .p-sortable-column .p-sortable-column-icon,
 ::ng-deep p-sortIcon {
   display: none !important;
+}
+
+
+::ng-deep .p-dropdown-filter-icon {
+  position: absolute;
+  top: 8px;
+}
+
+.p-dropdown-filter-container .pi.pi-search {
+  background-color: #008AC3;
 }
 th, td {
   text-align: left;
@@ -508,9 +519,11 @@ tr {
   transition: background 0.15s ease;
   user-select: none;
 }
-.action-option-item:hover {
-  background: var(--Gray-50);
+
+::ng-deep .action-option-item:hover {
+  background: rgb(216, 236, 243);
 }
+
 .action-option-item .option-label {
   color: var(--Gray-700);
   font-size: 0.8125rem;

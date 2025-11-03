@@ -13,16 +13,20 @@ import { ToastService } from 'src/app/services/toaster.service';
   
 })
 export class ReviewApproveComponent {
-  date: Date[] | undefined;
+  date : Date | null = null;
   employees: ManagerEmployees[] = [];
   selectedEmployee?: ManagerEmployees;
   kpiProfiles: KpiProfiles[] = [];
+  monthNames = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
 
   constructor(private httpsCallApi: HttpsCallsService,
       private toaster : ToastService
     ){}
   async ngOnInit(): Promise<void> {
-      const managerId = '55555555-5555-5555-5555-555555555555';
+      const managerId = '44444444-4444-4444-4444-444444444444';
       let employeeId = '11111111-1111-1111-1111-111111111111';
   
       try {
@@ -33,6 +37,7 @@ export class ReviewApproveComponent {
         employeeId = this.selectedEmployee.employeeId
         this.kpiProfiles = await firstValueFrom(this.httpsCallApi.getEmployeeKpis(employeeId, 2025, 1));
         console.log('Employee KPIs loaded:', this.kpiProfiles);
+        this.SelectingMonth();
       } catch (error) {
         console.error('Error loading data:', error);
       }
@@ -50,6 +55,7 @@ export class ReviewApproveComponent {
       next: (data) => {
         this.kpiProfiles = data;
         console.log('Employee KPIs:', data);
+        this.SelectingMonth();
       },
       error: (err) => {
         console.error('Failed to fetch employee KPIs:', err);
@@ -58,5 +64,15 @@ export class ReviewApproveComponent {
   }
 
 
+  SelectingMonth(){
+    
+     if (this.kpiProfiles && this.kpiProfiles.length > 0) {
+      const firstKpi = this.kpiProfiles[0];
+      // Create a date with the evaluation year and month (day doesn't matter for month view)
+      this.date = new Date(firstKpi.evaluationYear, firstKpi.evaluationMonth - 1, 1);
+      console.log('Calendar date set to:', this.date);
+  }
 
+
+  }
 }

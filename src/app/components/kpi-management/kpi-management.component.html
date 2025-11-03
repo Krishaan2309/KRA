@@ -153,6 +153,7 @@
             <div 
               class="action-option-item"
               (click)="selectAction(option, kpi)"
+              (click)="op.toggle($event)"
             >
               <span class="option-label">{{ option.label }}</span>
               <div class="toggle-wrapper">
@@ -162,7 +163,6 @@
                   [checked]="isActionSelected(option, kpi)"
                   class="toggle-input"
                 />
-                <span class="toggle-slider"></span>
               </div>
             </div>
           </ng-container>

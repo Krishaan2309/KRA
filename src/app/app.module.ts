@@ -27,6 +27,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { LoginComponent } from './components/login/login.component';
 import { LoaderComponent } from './components/loader/loader.component';
 import { LoaderInterceptor } from './interceptors/loader.interceptor';
+import { Tooltip, TooltipModule } from 'primeng/tooltip';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { LoaderInterceptor } from './interceptors/loader.interceptor';
     LoaderComponent
   ],
   imports: [
+    TooltipModule,
     CalendarModule,
     BrowserModule,
     AppRoutingModule,

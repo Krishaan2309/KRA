@@ -373,8 +373,12 @@ body {
     line-height: 1.1rem;
 }
 .kpi-formula {
-    font-size: 10px;
-    color: #999;
+    color: var(--Gray-600, #475467);
+    font-family: Inter;
+    font-size: 0.75rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.125rem; /* 150% */
 }
 .bold{
     color: var(--Gray-600, #475467);
