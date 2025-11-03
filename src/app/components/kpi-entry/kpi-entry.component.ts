@@ -5,6 +5,7 @@ import { KpiProfiles } from 'src/app/modals/kpi-profiles.model';
 import { KpiSubmission } from 'src/app/modals/kpi-submission.model';
 import { LastApprovedReference } from 'src/app/modals/last-approved-reference.model';
 import { ManagerEmployees } from 'src/app/modals/manager-employee.model';
+import { MissingPeriod } from 'src/app/modals/month-picker.model';
 import { HttpsCallsService } from 'src/app/services/https-calls.service';
 import { ToastService } from 'src/app/services/toaster.service';
 
@@ -27,6 +28,11 @@ export class KpiEntryComponent {
   evalutionMonth : number = 1
   summary!: EmployeeKpiSummary;
   lastApprovedReference!: LastApprovedReference;
+   periods: MissingPeriod[] = [];
+  selectedPeriod?: MissingPeriod;
+   private employeeId = '7a440c01-9cd6-45a4-aadd-2aed2943d01a';
+  private startYear = 2025;
+  private startMonth = 9;
 
   @ViewChild('userBox') userBox!: ElementRef;
   @ViewChildren('targetInput') targetInputs!: QueryList<ElementRef>;
@@ -38,16 +44,19 @@ export class KpiEntryComponent {
   ){}
 
   async ngOnInit(): Promise<void> {
-    const managerId = '55555555-5555-5555-5555-555555555555';
-    let employeeId = '11111111-1111-1111-1111-111111111111';
+    let employeeId = '7a440c01-9cd6-45a4-aadd-2aed2943d01a';
 
     try {
-      this.employees = await firstValueFrom(this.httpsCallApi.getEmployeesByManager(managerId));
-      console.log('Employees loaded:', this.employees);
-      this.selectedEmployee = this.employees[0];
-      console.log('Selected employee:', this.selectedEmployee);
-      employeeId = this.selectedEmployee.employeeId
-      this.kpiProfiles = await firstValueFrom(this.httpsCallApi.getEmployeeKpis(employeeId, 2025, 1));
+      // this.employees = await firstValueFrom(this.httpsCallApi.getEmployeesByManager(managerId));
+      // console.log('Employees loaded:', this.employees);
+      // this.selectedEmployee = this.employees[0];
+      // console.log('Selected employee:', this.selectedEmployee);
+      // employeeId = this.selectedEmployee.employeeId
+      this.periods = await firstValueFrom(this.httpsCallApi.getMissingSelfPeriods(employeeId, this.startYear, this.startMonth));
+      this.selectedPeriod = this.periods[this.periods.length-1]
+      const year = this.selectedPeriod.evaluationYear;
+      const month = this.selectedPeriod.evaluationMonth;
+      this.kpiProfiles = await firstValueFrom(this.httpsCallApi.getEmployeeKpis(employeeId, year, month));
       this.summary = await firstValueFrom(this.httpsCallApi.getEmployeeCurrentSummary(employeeId, 2025, 1));
       this.lastApprovedReference = await firstValueFrom(this.httpsCallApi.getLastApprovedReference(employeeId, 2025, 1));
 
@@ -57,8 +66,8 @@ export class KpiEntryComponent {
     }
   }
 
-getLastApprovedReference(employeeId: string, currentYear: number, currentMonth: number){
-  this.httpsCallApi.getLastApprovedReference(employeeId, currentYear, currentMonth).subscribe({
+getLastApprovedReference(employeeId: string, year: number, month: number){
+  this.httpsCallApi.getLastApprovedReference(employeeId, year, month).subscribe({
       next: (res) => {
         this.lastApprovedReference = res;
         console.log('Employee  Last Approved Reference:', this.summary);
@@ -82,18 +91,43 @@ getSummary(employeeId: string, year:number, month:number){
 
 }
 
-  getEmployeesByManager(managerId: string){
-    this.httpsCallApi.getEmployeesByManager(managerId).subscribe({
-        next: (data) => {
-          (this.employees = data)
-          console.log("MANAGER'S EMployees", this.employees)
-        },
-        error: (err) => {console.error('Failed to load employees:', err)}
-      });
+
+fetchPeriods(): void {
+  this.httpsCallApi
+    .getMissingSelfPeriods(this.employeeId, 2025, 7)
+    .subscribe({
+      next: (res) => (this.periods = res),
+      error: (err) => console.error('Error fetching periods:', err)
+    });
   }
 
-  loadEmployeeKpis(employeeId: string): void {
-    this.httpsCallApi.getEmployeeKpis(employeeId, 2025, 1).subscribe({
+  onPeriodSelect(event: any) {
+    console.log('Selected Period:', this.selectedPeriod);
+    this.getSummary(this.employeeId, this.selectedPeriod?.evaluationYear, this.selectedPeriod?.evaluationMonth)
+    this.getLastApprovedReference(this.employeeId, this.selectedPeriod?.evaluationYear, this.selectedPeriod?.evaluationMonth)
+    this.loadEmployeeKpis(this.employeeId, this.selectedPeriod?.evaluationYear, this.selectedPeriod?.evaluationMonth)
+  }
+
+  getMonthName(month: number): string {
+    const monthNames = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    return monthNames[month - 1] || '';
+  }
+
+  // getEmployeesByManager(managerId: string){
+  //   this.httpsCallApi.getEmployeesByManager(managerId).subscribe({
+  //       next: (data) => {
+  //         (this.employees = data)
+  //         console.log("MANAGER'S EMployees", this.employees)
+  //       },
+  //       error: (err) => {console.error('Failed to load employees:', err)}
+  //     });
+  // }
+
+  loadEmployeeKpis(employeeId: string, year:number, month:number): void {
+    this.httpsCallApi.getEmployeeKpis(employeeId, year, month).subscribe({
       next: (data) => {
         this.kpiProfiles = data;
         console.log('Employee KPIs:', data);
@@ -104,62 +138,61 @@ getSummary(employeeId: string, year:number, month:number){
     });
   }
 
-  onToggle(event: Event): void {
-    const inputElement = event.target as HTMLInputElement;
-    this.toggleState = inputElement.checked;
+  // onToggle(event: Event): void {
+  //   const inputElement = event.target as HTMLInputElement;
+  //   this.toggleState = inputElement.checked;
 
-    if (this.toggleState) {
+  //   if (this.toggleState) {
       
-      this.selfRate = true
-      console.log('SELF RATE ON', this.selfRate);
-      const managerId = '55555555-5555-5555-5555-555555555555';
-      this.loadEmployeeKpis(managerId)
-    } else {
-      this.selfRate = false
-      console.log('SELF RATE OFF', this.selfRate);
-      this.selectedEmployee = this.employees[0];
-      const employeeId = this.selectedEmployee.employeeId
-      this.loadEmployeeKpis(employeeId)
+  //     this.selfRate = true
+  //     console.log('SELF RATE ON', this.selfRate);
+  //     const managerId = '7a440c01-9cd6-45a4-aadd-2aed2943d01a';
+  //     this.loadEmployeeKpis(managerId)
+  //   } else {
+  //     this.selfRate = false
+  //     console.log('SELF RATE OFF', this.selfRate);
+  //     this.selectedEmployee = this.employees[0];
+  //     const employeeId = this.selectedEmployee.employeeId
+  //     this.loadEmployeeKpis(employeeId)
       
-    }
-  }
+  //   }
+  // }
 
-  toggleDropdown() {
-    this.isOpen = !this.isOpen;
-  }
+  // toggleDropdown() {
+  //   this.isOpen = !this.isOpen;
+  // }
 
-  selectEmployee(emp: ManagerEmployees) {
-    console.log('Selected employee:', emp);
-    this.selectedEmployee = emp;
-    this.isOpen = false;
-    this.searchTerm = '';
-    // Trigger other data loads
-    this.loadEmployeeKpis(emp.employeeId);
-    this.getSummary(emp.employeeId, 2025,1);
-    this.getLastApprovedReference(emp.employeeId, 2025, 1)
-  }
+  // selectEmployee(emp: ManagerEmployees) {
+  //   console.log('Selected employee:', emp);
+  //   this.selectedEmployee = emp;
+  //   this.isOpen = false;
+  //   this.searchTerm = '';
+  //   // Trigger other data loads
+  //   this.loadEmployeeKpis(emp.employeeId);
+  //   this.getSummary(emp.employeeId, 2025,1);
+  //   this.getLastApprovedReference(emp.employeeId, 2025, 1)
+  // }
 
-  filterEmployees(){
-    const term = this.searchTerm.toLowerCase();
+  // filterEmployees(){
+  //   const term = this.searchTerm.toLowerCase();
     
-    return this.filteredEmployees = this.employees.filter( emp =>
-      emp.employeeName.toLowerCase().includes(term) ||
-      emp.employeeCode.toLowerCase().includes(term)
-    );
-  }
+  //   return this.filteredEmployees = this.employees.filter( emp =>
+  //     emp.employeeName.toLowerCase().includes(term) ||
+  //     emp.employeeCode.toLowerCase().includes(term)
+  //   );
+  // }
 
-  @HostListener('document:click', ['$event'])
-  onClickOutside(event: MouseEvent) {
-    if (this.userBox && !this.userBox.nativeElement.contains(event.target)) {
-      this.isOpen = false;
-    }
-  }
+  // @HostListener('document:click', ['$event'])
+  // onClickOutside(event: MouseEvent) {
+  //   if (this.userBox && !this.userBox.nativeElement.contains(event.target)) {
+  //     this.isOpen = false;
+  //   }
+  // }
 
   submitKpiEvaluation(opType: string): void {
-    const employeeId = this.selectedEmployee.employeeId
-    const managerId = this.selectedEmployee.employeeId
-    const evaluationYear = this.evalutionYear
-    const evaluationMonth = this.evalutionMonth
+    const employeeId = this.employeeId
+    const evaluationYear = this.selectedPeriod?.evaluationYear
+    const evaluationMonth = this.selectedPeriod?.evaluationMonth
     let operationType: number;
     if (this.selfRate)
     {
@@ -196,7 +229,7 @@ getSummary(employeeId: string, year:number, month:number){
   employeeId: employeeId,
   evaluationYear: evaluationYear,
   evaluationMonth: evaluationMonth,
-  enteredBy: managerId,
+  enteredBy: employeeId,
   kpiData: [],
   operationType: operationType
 };
@@ -220,6 +253,9 @@ getSummary(employeeId: string, year:number, month:number){
         console.log('Submit response:', res);
         if(opType === 'submit'){
           this.toaster.show('Kpi entry entered successfully', "success", 'KPI Submitted');
+          this.getSummary(this.employeeId, this.selectedPeriod?.evaluationYear, this.selectedPeriod?.evaluationMonth)
+          this.getLastApprovedReference(this.employeeId, this.selectedPeriod?.evaluationYear, this.selectedPeriod?.evaluationMonth)
+          this.loadEmployeeKpis(this.employeeId, this.selectedPeriod?.evaluationYear, this.selectedPeriod?.evaluationMonth)
         }
         if(opType === 'draft'){
           this.toaster.show('Kpi entry saved successfuly to drafts', "success", 'Saved to Drafts');

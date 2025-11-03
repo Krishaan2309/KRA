@@ -575,3 +575,39 @@ svg.rotate {
 .toggle-input:not(:checked) ~ .toggle-label .label-off { display: inline; }
 /* Small helper: make the whole label clickable */
 .toggle { touch-action: manipulation; }
+
+
+.month-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 250px;
+  font-family: 'Inter', sans-serif;
+}
+
+label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+select {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background-color: #f9fafb;
+  font-size: 14px;
+  color: #111827;
+  outline: none;
+  cursor: pointer;
+  transition: border 0.2s ease;
+}
+
+select:hover {
+  border-color: #2563eb;
+}
+
+select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
