@@ -60,48 +60,98 @@
             </div>
 
             <div class="review-panel">
-                <div class="employee-header">
-                    <div class="employee-avatar">{{selectedEmployee?.employeeName[0]}}</div>
-                    <div class="employee-details">
-                        <div class="employee-name">{{selectedEmployee?.employeeName}}</div>
-                        <div class="employee-meta">Role: <span class="bold">{{selectedEmployee?.gradeName}}-{{selectedEmployee?.departmentName}}</span> • Employee ID: <span class="bold">{{selectedEmployee?.employeeCode}}</span> • Level - {{selectedEmployee?.gradeLevel}}</div>
-                    </div>
-                    <div class="action-buttons">
-                        <button class="btn-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="16" viewBox="0 0 18 16" fill="none">
-                        <path d="M9 15.1335H16.5M12.75 1.38349C13.0815 1.05197 13.5312 0.865723 14 0.865723C14.2321 0.865723 14.462 0.911447 14.6765 1.00029C14.891 1.08912 15.0858 1.21934 15.25 1.38349C15.4142 1.54764 15.5444 1.74252 15.6332 1.95699C15.722 2.17147 15.7678 2.40134 15.7678 2.63349C15.7678 2.86564 15.722 3.09551 15.6332 3.30998C15.5444 3.52446 15.4142 3.71934 15.25 3.88349L4.83333 14.3002L1.5 15.1335L2.33333 11.8002L12.75 1.38349Z" stroke="#344054" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg></button>
-                        <button class="btn btn-reject">Reject</button>
-                        <button class="btn btn-approve">Approve</button>
-                    </div>
-                </div>
+  <div class="employee-header">
+    <div class="employee-avatar">{{selectedEmployee?.employeeName[0]}}</div>
+    <div class="employee-details">
+      <div class="employee-name">{{selectedEmployee?.employeeName}}</div>
+      <div class="employee-meta">
+        Role: <span class="bold">{{selectedEmployee?.gradeName}}-{{selectedEmployee?.departmentName}}</span>
+        • Employee ID: <span class="bold">{{selectedEmployee?.employeeCode}}</span>
+        • Level - {{selectedEmployee?.gradeLevel}}
+      </div>
+    </div>
+    <div class="action-buttons">
+      <button class="btn btn-approve" (click)="onApprove()">Approve</button>
+    </div>
+  </div>
 
-                <table class="kpi-table">
-                    <thead>
-                        <tr>
-                            <th>KPI Name</th>
-                            <th>Weight</th>
-                            <th>Target</th>
-                            <th>Actual</th>
-                            <th>Achieved%</th>
-                            <th>PUP Score</th>
-                            <th>Weightage</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let kpi of kpiProfiles">
-                            <td>
-                                <div class="kpi-name">{{kpi?.kpiName}}</div>
-                                <div class="kpi-formula">{{kpi?.measurementUnit}} • {{kpi?.formulaCode}}</div>
-                            </td>
-                            <td>{{kpi?.weightage}}%</td>
-                            <td><input type="text" class="value-input" [value]="kpi?.targetValue"></td>
-                            <td><input type="text" class="value-input" [value]="kpi?.actualValue"></td>
-                            <td><span class="achievement">{{kpi?.achievedPercentage}}</span></td>
-                            <td>{{kpi?.plipScore}}</td>
-                            <td>{{kpi?.weightageAchieved}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+  <table class="kpi-table">
+    <thead>
+      <tr>
+        <th>KPI Name</th>
+        <th>Weight</th>
+        <th>Target</th>
+        <th>Actual</th>
+        <th>Achieved%</th>
+        <th>PUP Score</th>
+        <th>Weightage</th>
+        <th>Comments</th>
+        <th>Edit</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let kpi of kpiProfiles; let i = index">
+        <td>
+          <div class="kpi-name">{{kpi.kpiName}}</div>
+          <div class="kpi-formula">{{kpi.measurementUnit}} • {{kpi.formulaCode}}</div>
+        </td>
+
+        <td>{{kpi.weightage}}</td>
+
+        <!-- Target -->
+        <td>
+          <input
+            type="number"
+            class="value-input"
+            [(ngModel)]="kpi.targetValue"
+            [readonly]="!kpi.isEditing"
+          />
+        </td>
+
+        <!-- Actual -->
+        <td>
+          <input
+            type="number"
+            class="value-input"
+            [(ngModel)]="kpi.actualValue"
+            [readonly]="!kpi.isEditing"
+          />
+        </td>
+
+        <td><span class="achievement">{{kpi.achievedPercentage}}</span></td>
+        <td>{{kpi.plipScore}}</td>
+        <td>{{kpi.weightageAchieved}}</td>
+
+        <!-- Comment Box -->
+        <td>
+          <textarea
+            *ngIf="kpi.isEditing"
+            [(ngModel)]="kpi.comment"
+            placeholder="Add comment (optional)"
+            rows="1"
+            class="comment-box"
+          ></textarea>
+        </td>
+
+        <!-- Edit Button -->
+        <td class="text-center">
+          <button class="btn-icon" (click)="enableRowEdit(kpi)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 18 16" fill="none">
+              <path
+                d="M9 15.1335H16.5M12.75 1.38349C13.0815 1.05197 13.5312 0.865723 14 0.865723C14.2321 0.865723 14.462 0.911447 14.6765 1.00029C14.891 1.08912 15.0858 1.21934 15.25 1.38349C15.4142 1.54764 15.5444 1.74252 15.6332 1.95699C15.722 2.17147 15.7678 2.40134 15.7678 2.63349C15.7678 2.86564 15.722 3.09551 15.6332 3.30998C15.5444 3.52446 15.4142 3.71934 15.25 3.88349L4.83333 14.3002L1.5 15.1335L2.33333 11.8002L12.75 1.38349Z"
+                stroke="#344054"
+                stroke-width="1.67"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
         </div>
     </div>

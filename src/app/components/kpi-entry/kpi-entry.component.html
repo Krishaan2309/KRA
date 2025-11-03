@@ -1,16 +1,19 @@
 <div class="kpi-entry-container">
   <!-- Tabs -->
-  <div class="tab-container">
-    <div class="tabs">
-      <button class="tab active">KPI Entry</button>
-      <button class="tab">History</button>
-      <button class="tab">Drafts</button>
-      <button class="tab">Self Rating</button>
-    </div>
-    <div class="date-container">
-      <input [readOnly]="true" [value]="monthNames[kpiProfiles[0]?.evaluationMonth - 1] + ' ' + kpiProfiles[0]?.evaluationYear">
-    </div>
-  </div>
+  <!-- <div class="tabs"> -->
+    <!-- <button class="tab active">KPI Entry</button> -->
+    <!-- <button class="tab">History</button> -->
+    <!-- <button class="tab">Drafts</button> -->
+    <!-- <button class="tab">Self Rating</button> -->
+    <!-- HTML -->
+<!-- <label class="toggle">
+  <input type="checkbox" class="toggle-input" (change)="onToggle($event)" />
+  <span class="toggle-track">
+    <span class="toggle-thumb"></span>
+  </span>
+</label> -->
+
+<!-- </div> -->
 
   <!-- Header -->
   <div class="entry-header">
@@ -19,52 +22,36 @@
       <p>Enter actual performance values for Users</p>
     </div>
     
-  <div class="user-box" (click)="toggleDropdown()" #userBox *ngIf="!selfRate">
-      <div>
-        <div class="avatar">{{selectedEmployee?.employeeName[0] || ''}}</div>
-        <div>
-          <span class="user-name">{{selectedEmployee?.employeeName || "Select Employee"}}</span>
-          <span class="user-id">{{selectedEmployee?.employeeCode}} {{ selectedEmployee?.gradeLevel}}</span>
-        </div>
-      </div>
-      <div *ngIf="!selfRate">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="21"
-          viewBox="0 0 20 21"
-          fill="none"
-          [ngClass]="{ 'rotate': isOpen }"
-        >
-          <path
-            d="M5 7.9668L10 12.9668L15 7.9668"
-            stroke="#101828"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-      </div>
-      <div class="dropdown-content" *ngIf="isOpen && !selfRate">
-        <div>
-          <input class="search-box" placeholder="Search" (click)="$event.stopPropagation()" [(ngModel)]="searchTerm"> 
-        </div>
-        <div *ngFor="let emp of filterEmployees()" (click)="selectEmployee(emp)" class="employee-detail-container">
-          <div class="employee-detail">
-            <span class="letter-icon">
-              {{ emp.employeeName.charAt(0).toUpperCase()}}
-            </span>
-            <span class="employee-values">
-              <p>{{ emp.employeeName}}</p>
-              <p>{{emp.employeeCode}}</p>
-            </span>
-          </div>
-          <div>
-            <p></p>
-          </div>
-        </div>
-      </div>
+  <!-- <div class="user-box">
+  <div>
+    <div class="avatar">{{ selectedEmployee?.employeeName[0] || '' }}</div>
+    <div>
+      <span class="user-name">
+        {{ selectedEmployee?.employeeName || "Select Employee" }}
+      </span>
+      <span class="user-id">
+        {{ selectedEmployee?.employeeCode }} {{ selectedEmployee?.gradeLevel }}
+      </span>
+    </div>
   </div>
+</div> -->
+
+<div class="month-picker">
+  <label for="monthSelect">Select Month</label>
+
+  <select
+    id="monthSelect"
+    [(ngModel)]="selectedPeriod"
+    (change)="onPeriodSelect($event)"
+  >
+    <option value="" disabled selected>Select Period</option>
+
+    <option *ngFor="let p of periods" [ngValue]="p">
+      {{ getMonthName(p.evaluationMonth) }} {{ p.evaluationYear }}
+    </option>
+  </select>
+</div>
+
 
   </div>
 
@@ -128,7 +115,7 @@
 
   <!-- Action Buttons -->
   <div class="action-buttons">
-    <button class="btn-outline" (click)="submitKpiEvaluation('draft')">Save as Draft</button>
+    <!-- <button class="btn-outline" (click)="submitKpiEvaluation('draft')">Save as Draft</button> -->
     <button class="btn-primary" (click)="submitKpiEvaluation('submit')">Submit</button>
   </div>
 </div>
