@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
+import { EvaluationSummary } from 'src/app/modals/evaluation-summary.model';
 import { KpiProfiles } from 'src/app/modals/kpi-profiles.model';
 import { ManagerEmployees } from 'src/app/modals/manager-employee.model';
 import { HttpsCallsService } from 'src/app/services/https-calls.service';
@@ -29,6 +30,10 @@ export class ReviewApproveComponent {
   kpiProfiles: KpiProfileView[] = [];
   reviewerId = '3fa85f64-5717-4562-b3fc-2c963f66afa6';
   superiorId = '3fa85f64-5717-4562-b3fc-2c963f66afa6';
+  periods: EvaluationSummary[] = [];
+  selectedPeriod?: EvaluationSummary;
+  managerId = '7a440c01-9cd6-45a4-aadd-2aed2943d01a';
+  employeeId = '7a440c01-9cd6-45a4-aadd-2aed2943d01a';
 
   constructor(
     private httpsCallApi: HttpsCallsService,
@@ -36,21 +41,29 @@ export class ReviewApproveComponent {
   ) {}
 
   async ngOnInit(): Promise<void> {
-    const managerId = '7a440c01-9cd6-45a4-aadd-2aed2943d01a';
-    let employeeId = 'c69dcaff-2d1b-424b-9016-00ed4f1ad63e';
+    // this.managerId = this.managerId
+    // this.employeeId = this.employeeId
 
     try {
+
+
+      this.periods = await firstValueFrom(this.httpsCallApi.getUnreviewedPeriods(this.managerId, 2025, 10));
+      this.selectedPeriod = this.periods[this.periods.length-1]
+
+
       this.employees = await firstValueFrom(
-        this.httpsCallApi.getEmployeesByManager(managerId)
+        this.httpsCallApi.getEmployeesByManager(this.managerId)
       );
       console.log('Employees loaded:', this.employees);
 
       this.selectedEmployee = this.employees[0];
       console.log('Selected employee:', this.selectedEmployee);
-      employeeId = this.selectedEmployee.employeeId;
+      this.employeeId = this.selectedEmployee.employeeId;
 
+      const year = this.selectedPeriod?.evaluationYear;
+      const month = this.selectedPeriod?.evaluationMonth;
       const kpiData = await firstValueFrom(
-        this.httpsCallApi.getEmployeeKpis(employeeId, 2025, 1)
+        this.httpsCallApi.getEmployeeKpis(this.employeeId, year, month)
       );
       console.log('Employee KPIs loaded:', kpiData);
 
@@ -72,11 +85,13 @@ export class ReviewApproveComponent {
   showKpiInfo(employee: ManagerEmployees): void {
     this.selectedEmployee = employee;
     console.log('Selected employee:', this.selectedEmployee);
-    this.loadEmployeeKpis(this.selectedEmployee.employeeId);
+    const year = this.selectedPeriod?.evaluationYear
+    const month = this.selectedPeriod?.evaluationMonth
+    this.loadEmployeeKpis(this.selectedEmployee.employeeId, year, month);
   }
 
-  loadEmployeeKpis(employeeId: string): void {
-    this.httpsCallApi.getEmployeeKpis(employeeId, 2025, 1).subscribe({
+  loadEmployeeKpis(employeeId: string, evaluationYear: number, evaluationMonth:number): void {
+    this.httpsCallApi.getEmployeeKpis(employeeId, evaluationYear, evaluationMonth).subscribe({
       next: (data: KpiProfiles[]) => {
         this.kpiProfiles = data.map((kpi) => ({
           ...kpi,
@@ -154,5 +169,23 @@ export class ReviewApproveComponent {
       console.error('Error approving KPIs:', error);
       // this.toaster.showError('Failed to approve KPIs.');
     }
+  }
+
+
+
+  onPeriodSelect(event: any) {
+    console.log('Selected Period:', this.selectedPeriod);
+    // this.getSummary(this.employeeId, this.selectedPeriod?.evaluationYear, this.selectedPeriod?.evaluationMonth)
+    // this.getLastApprovedReference(this.employeeId, this.selectedPeriod?.evaluationYear, this.selectedPeriod?.evaluationMonth)
+    this.loadEmployeeKpis(this.selectedEmployee?.employeeId, this.selectedPeriod?.evaluationYear, this.selectedPeriod?.evaluationMonth)
+  }
+
+
+  getMonthName(month: number): string {
+    const monthNames = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    return monthNames[month - 1] || '';
   }
 }

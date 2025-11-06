@@ -13,6 +13,7 @@ import { UnifiedSubmitRequest } from '../modals/kpi-submission.model';
 import { EmployeeKpiSummary } from '../modals/employee-kpi-summary.model';
 import { LastApprovedReference } from '../modals/last-approved-reference.model';
 import { MissingPeriod } from '../modals/month-picker.model';
+import { EvaluationSummary } from '../modals/evaluation-summary.model';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,8 @@ export class HttpsCallsService {
   private performanceProfileUrl = `${environment.apiBaseUrl}/performance-profiles`;
 
   private employeeKPIDataUrl = `${environment.apiBaseUrl}/employee-kpi-data`;
+
+  private employeeKPIReviewUrl = `${environment.apiBaseUrl}/kpi-reviews`;
 
   constructor(private http: HttpClient) {}
 
@@ -111,6 +114,12 @@ export class HttpsCallsService {
   getMissingSelfPeriods(employeeId: string, startYear: number, startMonth: number): Observable<MissingPeriod[]> {
     const url = `${this.employeeKPIDataUrl}/employee/${employeeId}/missing-self-periods?startYear=${startYear}&startMonth=${startMonth}`;
     return this.http.get<MissingPeriod[]>(url);
+  }
+
+
+  getUnreviewedPeriods(managerId: string, startYear: number, startMonth: number): Observable<EvaluationSummary[]> {
+    const url = `${this.employeeKPIReviewUrl}/manager/${managerId}/unreviewed-periods?startYear=${startYear}&startMonth=${startMonth}`;
+    return this.http.get<EvaluationSummary[]>(url);
   }
 
 }

@@ -7,13 +7,20 @@
                 <p>Enter actual performance values for Users</p>
             </div>
             <div class="card flex justify-center">
-                    <p-calendar
-                        [(ngModel)]="date"
-                        view="month"
-                        [dateFormat]="'MM yy'"
-                        [readonlyInput]="true" yearRange="2000:2035" placeholder="Select Month"
-                        [showIcon]="true" icon="pi pi-calendar">
-                    </p-calendar>                       
+                    <div class="month-picker">
+  <label for="monthSelect">Select Month</label>
+  <select
+    id="monthSelect"
+    [(ngModel)]="selectedPeriod"
+    (change)="onPeriodSelect($event)"
+  >
+    <option value="" disabled selected>Select Period</option>
+
+    <option *ngFor="let p of periods" [ngValue]="p">
+      {{ getMonthName(p?.evaluationMonth) }} {{ p?.evaluationYear }}
+    </option>
+  </select>
+</div>                      
             </div>
         </div>
 
@@ -39,10 +46,10 @@
         <div class="main-content">
             <div class="sidebar">
                 <h2>Direct Reports</h2>
-                <div class="tabs">
+                <!-- <div class="tabs">
                     <div class="tab active">All</div>
                     <div class="tab">Pending</div>
-                </div>
+                </div> -->
                 <div class="search-box">
                     <span class="search-icon"><img src="assets/search.svg"></span>
                     <input type="text" placeholder="Search Team Members">
@@ -83,7 +90,7 @@
         <th>Target</th>
         <th>Actual</th>
         <th>Achieved%</th>
-        <th>PUP Score</th>
+        <th>PLIP Score</th>
         <th>Weightage</th>
         <th>Comments</th>
         <th>Edit</th>
