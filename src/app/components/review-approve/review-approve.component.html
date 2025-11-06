@@ -1,5 +1,3 @@
-
-
     <div class="container">
         <div class="header">
             <div class="header-left">
@@ -45,16 +43,16 @@
                 </div>
                 <div class="search-box">
                     <span class="search-icon"><img src="assets/search.svg"></span>
-                    <input type="text" placeholder="Search Team Members">
+                    <input type="text" placeholder="Search Team Members" [(ngModel)]="searchText" (input)="filterData()">
                 </div>
                 <div class="team-list">
-                    <div class="team-member " *ngFor="let employee of employees" (click)="showKpiInfo(employee)">
+                    <div class="team-member " *ngFor="let employee of filteredEmployees" (click)="showKpiInfo(employee)">
                         <div class="avatar active-user">{{employee?.employeeName[0]}}</div>
                         <div class="member-info">
                             <div class="member-name">{{employee?.employeeName}}</div>
                             <div class="member-id">{{employee?.employeeCode}} - {{employee?.gradeLevel}}</div>
                         </div>
-                        <div></div>
+                        <div *ngIf="selectedEmployee.employeeCode === employee.employeeCode"><img src="assets/Group-circle.svg"></div>
                     </div>
                 </div>
             </div>

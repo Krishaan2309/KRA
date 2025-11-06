@@ -29,6 +29,8 @@ export class ReviewApproveComponent {
   kpiProfiles: KpiProfileView[] = [];
   reviewerId = '3fa85f64-5717-4562-b3fc-2c963f66afa6';
   superiorId = '3fa85f64-5717-4562-b3fc-2c963f66afa6';
+  searchText = ''
+  filteredEmployees = [...this.employees];
 
   constructor(
     private httpsCallApi: HttpsCallsService,
@@ -44,7 +46,7 @@ export class ReviewApproveComponent {
         this.httpsCallApi.getEmployeesByManager(managerId)
       );
       console.log('Employees loaded:', this.employees);
-
+      this.filteredEmployees = this.employees; // This line added by sasidharan for the filter functionality
       this.selectedEmployee = this.employees[0];
       console.log('Selected employee:', this.selectedEmployee);
       employeeId = this.selectedEmployee.employeeId;
@@ -67,6 +69,22 @@ export class ReviewApproveComponent {
     } catch (error) {
       console.error('Error loading data:', error);
     }
+  }
+
+  filterData(){
+    const search = this.searchText.toLowerCase().trim();
+
+    if(!search){
+      this.filteredEmployees = [...this.employees];
+      return;
+    }
+
+    this.filteredEmployees = this.employees.filter( emp => 
+      emp.employeeName.toLowerCase().includes(search) ||
+      emp.employeeCode.toLowerCase().includes(search) ||
+      emp.gradeLevel.toLowerCase().includes(search)
+    );
+
   }
 
   showKpiInfo(employee: ManagerEmployees): void {
