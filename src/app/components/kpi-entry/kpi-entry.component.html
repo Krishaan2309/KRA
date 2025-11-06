@@ -46,7 +46,7 @@
     <option value="" disabled selected>Select Period</option>
 
     <option *ngFor="let p of periods" [ngValue]="p">
-      {{ getMonthName(p.evaluationMonth) }} {{ p.evaluationYear }}
+      {{ getMonthName(p?.evaluationMonth) }} {{ p?.evaluationYear }}
     </option>
   </select>
 </div>
@@ -127,7 +127,7 @@
       
 
       <div class="summary-card">
-        <h3>{{getMonthName(summary.evaluationMonth)}} Summary</h3>
+        <h3>{{getMonthName(summary?.evaluationMonth)}} Summary</h3>
         <div class="summary-row">
           <span>Projected Pay</span>
           <strong>₹6{{summary?.projectedPay || ''}}</strong>

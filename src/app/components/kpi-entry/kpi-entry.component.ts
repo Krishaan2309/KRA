@@ -30,7 +30,7 @@ export class KpiEntryComponent {
   lastApprovedReference!: LastApprovedReference;
    periods: MissingPeriod[] = [];
   selectedPeriod?: MissingPeriod;
-   private employeeId = '7a440c01-9cd6-45a4-aadd-2aed2943d01a';
+   private employeeId = 'c69dcaff-2d1b-424b-9016-00ed4f1ad63e';
   private startYear = 2025;
   private startMonth = 9;
   isSubmitted :boolean = false;
@@ -49,7 +49,7 @@ export class KpiEntryComponent {
   ){}
 
   async ngOnInit(): Promise<void> {
-    let employeeId = '7a440c01-9cd6-45a4-aadd-2aed2943d01a';
+    let employeeId = this.employeeId
 
     try {
       // this.employees = await firstValueFrom(this.httpsCallApi.getEmployeesByManager(managerId));
@@ -60,8 +60,8 @@ export class KpiEntryComponent {
 
       this.periods = await firstValueFrom(this.httpsCallApi.getMissingSelfPeriods(employeeId, this.startYear, this.startMonth));
       this.selectedPeriod = this.periods[this.periods.length-1]
-      const year = this.selectedPeriod.evaluationYear;
-      const month = this.selectedPeriod.evaluationMonth;
+      const year = this.selectedPeriod?.evaluationYear;
+      const month = this.selectedPeriod?.evaluationMonth;
       this.kpiProfiles = await firstValueFrom(this.httpsCallApi.getEmployeeKpis(employeeId, year, month));
       this.summary = await firstValueFrom(this.httpsCallApi.getEmployeeCurrentSummary(employeeId, 2025, 1));
       if (this.kpiProfiles.every(e => e.entryStatus === 'submitted')) {
