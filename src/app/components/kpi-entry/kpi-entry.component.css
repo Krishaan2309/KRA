@@ -156,7 +156,24 @@
   line-height: 1.2;
 }
 
+.calendar-icon{
+  width: 1rem;
+  height: 1rem;
+  position: absolute;
+}
 
+.month-picker select {
+  padding: 8px 36px 8px 12px; /* leave space for the icon */
+  background: url('/assets/calendar.png') no-repeat right 10px center; /* calendar icon path */
+  background-size: 20px 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  appearance: none; /* remove default arrow on some browsers */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+}
 
 /* Inputs (Target / Actual) */
 .kpi-table input[type="number"] {
@@ -176,6 +193,14 @@
   border-color: #60a5fa;
   box-shadow: 0 0 0 2px rgba(96,165,250,.25);
 }
+
+.kpi-table input.filled {
+  border-color: #87d4a7; /* green border for success */
+  background-color: #ecf9f1; /* soft green tint */
+  box-shadow: 0 0 5px rgba(121, 204, 155, 0.4);
+  cursor: not-allowed; 
+}
+
 /* Completed badge */
 .status.completed {
   display: inline-flex;
@@ -634,3 +659,6 @@ select:focus {
   border-color: #2563eb;
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
 }
+
+
+

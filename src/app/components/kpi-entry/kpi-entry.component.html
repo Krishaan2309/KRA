@@ -84,22 +84,24 @@
 
           <!-- Target Input -->
           <td>
-            <input type="number" [disabled]="isSubmitted" #targetInput [value]="kpi.targetValue"/>
+            <input type="number" [disabled]="isSubmitted" #targetInput [value]="kpi.targetValue" [ngClass]="{ 'filled': targetInput.value && targetInput.value !== '0' }"/>
           </td>
 
           <!-- Actual Input -->
           <td>
-            <input type="number" [disabled]="isSubmitted" #actualInput [value]="kpi.actualValue"/>
+            <input type="number" [disabled]="isSubmitted" #actualInput [value]="kpi.actualValue" [ngClass]="{ 'filled': targetInput.value && targetInput.value !== '0' }"/>
           </td>
 
           <!-- Achieved % -->
-          <td>{{kpi?.achievedPercentage | number: '1.2-2'}}%</td>
+          <td>{{ (kpi?.achievedPercentage || 0) % 1 === 0 
+              ? (kpi?.achievedPercentage || 0) 
+              : (kpi?.achievedPercentage | number:'1.0-2') }}%</td>
 
           <!-- PLIP Score -->
-          <td>{{kpi?.plipScore}}</td>
+          <td>{{kpi?.plipScore || 0}}</td>
 
           <!-- Weightage -->
-          <td>{{kpi?.weightageAchieved}}%</td>
+          <td>{{kpi?.weightageAchieved || 0}}%</td>
 
           <!-- Status -->
           <td>
