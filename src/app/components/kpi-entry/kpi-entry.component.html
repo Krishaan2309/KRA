@@ -38,7 +38,6 @@
 
 <div class="month-picker">
   <label for="monthSelect">Select Month</label>
-
   <select
     id="monthSelect"
     [(ngModel)]="selectedPeriod"
@@ -85,16 +84,16 @@
 
           <!-- Target Input -->
           <td>
-            <input type="number" #targetInput [value]="kpi.targetValue"/>
+            <input type="number" [disabled]="isSubmitted" #targetInput [value]="kpi.targetValue"/>
           </td>
 
           <!-- Actual Input -->
           <td>
-            <input type="number" #actualInput [value]="kpi.actualValue"/>
+            <input type="number" [disabled]="isSubmitted" #actualInput [value]="kpi.actualValue"/>
           </td>
 
           <!-- Achieved % -->
-          <td>{{kpi?.achievedPercentage || 0}}%</td>
+          <td>{{kpi?.achievedPercentage | number: '1.2-2'}}%</td>
 
           <!-- PLIP Score -->
           <td>{{kpi?.plipScore}}</td>
@@ -126,7 +125,7 @@
       
 
       <div class="summary-card">
-        <h3>Current Summary</h3>
+        <h3>{{getMonthName(summary.evaluationMonth)}} Summary</h3>
         <div class="summary-row">
           <span>Projected Pay</span>
           <strong>₹6{{summary?.projectedPay || ''}}</strong>
@@ -134,21 +133,21 @@
         <div class="summary-rows">
           <div class="left-row">
             <span>Total KPIs</span>
-            <strong>{{summary?.totalKpis || ''}}</strong>              
+            <strong>{{summary?.totalKpis || 0}}</strong>              
           </div>
           <div class="right-row">
             <span>Completed</span>
-            <strong class="strong">{{summary?.completedKpis || ''}}</strong>              
+            <strong class="strong">{{summary?.completedKpis || 0}}</strong>              
           </div>          
         </div>
         <div class="summary-rows">
           <div class="left-row">
             <span>Pending</span>
-            <strong>{{summary?.pendingKpis || ''}}</strong>             
+            <strong>{{summary?.pendingKpis || 0}}</strong>             
           </div>
           <div class="right-row">
             <span>Achieved Weightage</span>
-            <span class="strong">{{summary?.achievedWeightage}}%</span>             
+            <span class="strong">{{summary?.achievedWeightage || 0}}%</span>             
           </div>          
         </div>
       </div>

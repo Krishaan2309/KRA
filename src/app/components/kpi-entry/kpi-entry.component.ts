@@ -8,7 +8,7 @@ import { ManagerEmployees } from 'src/app/modals/manager-employee.model';
 import { MissingPeriod } from 'src/app/modals/month-picker.model';
 import { HttpsCallsService } from 'src/app/services/https-calls.service';
 import { ToastService } from 'src/app/services/toaster.service';
-
+import { KpiSubmitResponse } from 'src/app/modals/kpi-submit-response';
 @Component({
   selector: 'app-kpi-entry',
   templateUrl: './kpi-entry.component.html',
@@ -33,7 +33,7 @@ export class KpiEntryComponent {
    private employeeId = '7a440c01-9cd6-45a4-aadd-2aed2943d01a';
   private startYear = 2025;
   private startMonth = 9;
-
+  isSubmitted :boolean = false;
   monthNames = [
       'January', 'February', 'March', 'April', 'May', 'June',
       'July', 'August', 'September', 'October', 'November', 'December'
@@ -57,14 +57,20 @@ export class KpiEntryComponent {
       // this.selectedEmployee = this.employees[0];
       // console.log('Selected employee:', this.selectedEmployee);
       // employeeId = this.selectedEmployee.employeeId
+
       this.periods = await firstValueFrom(this.httpsCallApi.getMissingSelfPeriods(employeeId, this.startYear, this.startMonth));
       this.selectedPeriod = this.periods[this.periods.length-1]
       const year = this.selectedPeriod.evaluationYear;
       const month = this.selectedPeriod.evaluationMonth;
       this.kpiProfiles = await firstValueFrom(this.httpsCallApi.getEmployeeKpis(employeeId, year, month));
       this.summary = await firstValueFrom(this.httpsCallApi.getEmployeeCurrentSummary(employeeId, 2025, 1));
+      if (this.kpiProfiles.every(e => e.entryStatus === 'submitted')) {
+        this.isSubmitted = true;
+      } else {
+        this.isSubmitted = false;
+      }
       this.lastApprovedReference = await firstValueFrom(this.httpsCallApi.getLastApprovedReference(employeeId, 2025, 1));
-
+      this.getSummary(employeeId, year, month);
     console.log('Employee KPIs loaded:', this.kpiProfiles);
     } catch (error) {
       console.error('Error loading data:', error);
@@ -78,7 +84,7 @@ getLastApprovedReference(employeeId: string, year: number, month: number){
         console.log('Employee  Last Approved Reference:', this.summary);
       },
       error: (err) => {
-        console.error('Error fetching  Last Approved Reference:', err);
+        console.error('Error fetching  Last Approved Reference:', err); 
       }
     });
 
@@ -136,6 +142,13 @@ fetchPeriods(): void {
       next: (data) => {
         this.kpiProfiles = data;
         console.log('Employee KPIs:', data);
+
+         // Check if all KPIs are submitted
+      if (this.kpiProfiles.every(e => e.entryStatus === 'submitted')) {
+        this.isSubmitted = true;
+      } else {
+        this.isSubmitted = false;
+      }
       },
       error: (err) => {
         console.error('Failed to fetch employee KPIs:', err);
@@ -254,18 +267,22 @@ fetchPeriods(): void {
 
     // Call the service
     this.httpsCallApi.submitUnifiedKpi(payload).subscribe({
-      next: (res) => {
+      next: (res :KpiSubmitResponse) => {
         console.log('Submit response:', res);
-        if(opType === 'submit'){
-          this.toaster.show('Kpi entry entered successfully', "success", 'KPI Submitted');
-          this.getSummary(this.employeeId, this.selectedPeriod?.evaluationYear, this.selectedPeriod?.evaluationMonth)
-          this.getLastApprovedReference(this.employeeId, this.selectedPeriod?.evaluationYear, this.selectedPeriod?.evaluationMonth)
-          this.loadEmployeeKpis(this.employeeId, this.selectedPeriod?.evaluationYear, this.selectedPeriod?.evaluationMonth)
+        if(res.success === true){
+          if(opType === 'submit'){
+            this.toaster.show('Kpi entry entered successfully', "success", 'KPI Submitted');
+            this.isSubmitted = true;
+            this.getSummary(this.employeeId, this.selectedPeriod?.evaluationYear, this.selectedPeriod?.evaluationMonth)
+            this.getLastApprovedReference(this.employeeId, this.selectedPeriod?.evaluationYear, this.selectedPeriod?.evaluationMonth)
+            this.loadEmployeeKpis(this.employeeId, this.selectedPeriod?.evaluationYear, this.selectedPeriod?.evaluationMonth)
+          }
+          if(opType === 'draft'){
+            this.toaster.show('Kpi entry saved successfuly to drafts', "success", 'Saved to Drafts');
+          }
+        }else {
+          this.toaster.show('Kpi entries are already Submitted', 'info', 'Already Submitted')
         }
-        if(opType === 'draft'){
-          this.toaster.show('Kpi entry saved successfuly to drafts', "success", 'Saved to Drafts');
-        }
-        
         // this.targetInputs.forEach(input => input.nativeElement.value = '');
         // this.actualInputs.forEach(input => input.nativeElement.value = '');
       },
