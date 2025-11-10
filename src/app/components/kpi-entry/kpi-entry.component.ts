@@ -30,7 +30,7 @@ export class KpiEntryComponent {
   lastApprovedReference!: LastApprovedReference;
    periods: MissingPeriod[] = [];
   selectedPeriod?: MissingPeriod;
-   private employeeId = 'c69dcaff-2d1b-424b-9016-00ed4f1ad63e';
+   private employeeId = '2239d7b1-9861-43b8-be32-91443c1a9f3a';
   private startYear = 2025;
   private startMonth = 9;
   isSubmitted :boolean = false;

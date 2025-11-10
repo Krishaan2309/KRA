@@ -7,3 +7,4 @@ export interface KpiSubmitResponse {
   entryStatus: string;
   workflowState: string;
 }
+

@@ -14,6 +14,7 @@ import { EmployeeKpiSummary } from '../modals/employee-kpi-summary.model';
 import { LastApprovedReference } from '../modals/last-approved-reference.model';
 import { MissingPeriod } from '../modals/month-picker.model';
 import { EvaluationSummary } from '../modals/evaluation-summary.model';
+import { reviewSubmit } from '../modals/kpi-review.model';
 
 @Injectable({
   providedIn: 'root'
@@ -110,6 +111,9 @@ export class HttpsCallsService {
     return this.http.post(`${this.employeeKPIDataUrl}/unified-submit`, payload);
   }
 
+  reviewUnifiedKpi(payload: reviewSubmit): Observable<any> {
+    return this.http.post(`${this.employeeKPIReviewUrl}/unified-review`, payload);
+  }
 
   getMissingSelfPeriods(employeeId: string, startYear: number, startMonth: number): Observable<MissingPeriod[]> {
     const url = `${this.employeeKPIDataUrl}/employee/${employeeId}/missing-self-periods?startYear=${startYear}&startMonth=${startMonth}`;

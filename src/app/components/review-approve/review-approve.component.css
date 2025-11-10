@@ -16,9 +16,10 @@ body {
 }
 .header {
     display: flex;
+    position: relative;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 18px;
+    margin-bottom: 0.875rem;
     flex-wrap: wrap;
     gap: 12px;
 }
@@ -75,6 +76,79 @@ body {
     cursor: pointer;
     min-width: 130px;
 }
+.month-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 250px;
+  font-family: 'Inter', sans-serif;
+}
+
+label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+
+.month-picker select {
+  padding: 8px 36px 8px 12px; /* leave space for the icon */
+  background: url('/assets/calendar-icon.svg') no-repeat right 10px center; /* calendar icon path */
+  background-size: 20px 20px;
+  border-radius: 0.5rem;
+  border: 1px solid var(--Gray-300, #D0D5DD);
+  box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+  appearance: none; /* remove default arrow on some browsers */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  color: var(--Gray-700, #344054);
+  font-family: Inter;
+  font-size: 0.9rem;
+  font-style: normal;
+  font-weight: 500;
+}
+
+.downarrow.rotate {
+  transform: rotate(180deg);
+}
+.popup-card{
+    display: flex;
+    width: 100%;
+    gap: 0.625rem;
+    position: absolute;
+    right: 0px;
+    align-items: center;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    border: 1px solid var(--Gray-300, #D0D5DD);
+    background: #FFF;
+    box-shadow: 0 251px 70px 0 rgba(0, 0, 0, 0.00), 0 160px 64px 0 rgba(0, 0, 0, 0.01), 0 90px 54px 0 rgba(0, 0, 0, 0.05), 0 40px 40px 0 rgba(0, 0, 0, 0.09), 0 10px 22px 0 rgba(0, 0, 0, 0.10);    
+}
+
+.popup-container button{
+    border-radius: 1rem;
+    border: 1px solid var(--Gray-300, #D0D5DD);
+    background: var(--White, #FFF);
+    box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+    display: flex;
+    padding: 0.625rem 1rem;
+    justify-content: center;
+    align-items: center;
+    color: var(--Gray-700, #344054);
+    font-family: Inter;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 1.5rem; /* 150% */
+}
+.justify-center{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -83,6 +157,7 @@ body {
 }
 .stat-card {
     padding: 12px;
+    width: 100%;
     border-radius: 7px;
     border: 1px solid #e5e5e5;
 }
@@ -360,6 +435,14 @@ body {
     font-weight: 400;
     line-height: 1.1rem;
 }
+
+/* .comment-box{
+padding: 10px;
+    border: 1px solid lightgray;
+    border-radius: 0.5rem;
+    width: 70%;
+} */
+
 /* Optional: remove border on last row for cleaner rounded bottom */
 .kpi-table tbody tr:last-child td {
     border-bottom: none;

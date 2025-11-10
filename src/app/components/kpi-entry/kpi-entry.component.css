@@ -164,15 +164,20 @@
 
 .month-picker select {
   padding: 8px 36px 8px 12px; /* leave space for the icon */
-  background: url('/assets/calendar.png') no-repeat right 10px center; /* calendar icon path */
+  background: url('/assets/calendar-icon.svg') no-repeat right 10px center; /* calendar icon path */
   background-size: 20px 20px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
+  border-radius: 0.5rem;
+  border: 1px solid var(--Gray-300, #D0D5DD);
+  box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
   appearance: none; /* remove default arrow on some browsers */
   -webkit-appearance: none;
   -moz-appearance: none;
   cursor: pointer;
+  color: var(--Gray-700, #344054);
+  font-family: Inter;
+  font-size: 0.9rem;
+  font-style: normal;
+  font-weight: 500;
 }
 
 /* Inputs (Target / Actual) */

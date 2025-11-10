@@ -5,20 +5,47 @@
                 <p>Enter actual performance values for Users</p>
             </div>
             <div class="card flex justify-center">
-                    <div class="month-picker">
-  <label for="monthSelect">Select Month</label>
-  <select
-    id="monthSelect"
-    [(ngModel)]="selectedPeriod"
-    (change)="onPeriodSelect($event)"
-  >
-    <option value="" disabled selected>Select Period</option>
+              <div class="month-picker">
+                <!-- <label for="monthSelect">Select Month</label> -->
+                <select
+                  id="monthSelect"
+                  [(ngModel)]="selectedPeriod"
+                  (change)="onPeriodSelect($event)"
+                >
+                  <option value="" disabled selected>Select Period</option>
 
-    <option *ngFor="let p of periods" [ngValue]="p">
-      {{ getMonthName(p?.evaluationMonth) }} {{ p?.evaluationYear }}
-    </option>
-  </select>
-</div>                      
+                  <option *ngFor="let p of periods" [ngValue]="p">
+                    {{ getMonthName(p?.evaluationMonth) }} {{ p?.evaluationYear }}
+                  </option>
+                </select>
+              </div> 
+              
+              <div class="popup-container">
+                <button (click)="toggleDropdown()">
+                  Last Month Reference 
+                  <img class="downarrow" src="assets/chevron-down.svg" [ngClass]="{ 'rotate': isOpened }">
+                </button>
+
+                <div *ngIf="isOpened"
+                class="popup-card">
+                    <div class="stat-card blue">
+                      <div class="stat-label">Direct Reports</div>
+                      <div class="stat-value">12</div>
+                    </div>
+                    <div class="stat-card purple">
+                        <div class="stat-label">Pending Reviews</div>
+                        <div class="stat-value">8</div>
+                    </div>
+                    <div class="stat-card green">
+                        <div class="stat-label">Approved</div>
+                        <div class="stat-value">4</div>
+                    </div>
+                    <div class="stat-card orange">
+                        <div class="stat-label">Avg Performance</div>
+                        <div class="stat-value">88%</div>
+                    </div>
+                </div>
+              </div>
             </div>
         </div>
 
