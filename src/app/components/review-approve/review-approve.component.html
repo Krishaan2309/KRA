@@ -138,6 +138,7 @@
             class="value-input"
             [(ngModel)]="kpi.targetValue"
             [readonly]="!kpi.isEditing"
+            [ngClass]="{'readonly-input': kpi.isEditing}"
           />
         </td>
 
@@ -148,6 +149,7 @@
             class="value-input"
             [(ngModel)]="kpi.actualValue"
             [readonly]="!kpi.isEditing"
+            [ngClass]="{'readonly-input': kpi.isEditing}"
           />
         </td>
 
